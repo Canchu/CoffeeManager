@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var serialport = require('serialport');
 var http = require('http');
-//var mysql = require('mysql');
+var mysql = require('mysql');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -67,13 +67,13 @@ app.use(function(err, req, res, next) {
 
 
 //connect DB
-/*
+
 var connection = mysql.createConnection({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'user',
   password: process.env.DB_PASS || 'NojiNoji',
   database: process.env.DB_NAME || 'CoffeeManager_db'
-});*/
+});
 
 
 // Serial Port
@@ -119,21 +119,15 @@ io.sockets.on('connection', function(socket) {
     });*/
 });
 
-//connectDB Action
-/*
+//connect with DB
 connection.connect(function(err) {
   if (err) {
     console.error('error connecting: ' + err.stack);
     return;
   }
   console.log('DBconnected as id ' + connection.threadId);
-   
-  connection.query('select * from test', function (err, rows) {
-    console.log(rows);
-    //res.render('users', { title: 'Express Users', users: rows });
-  });
+});
 
-});*/
 
 // data from Serial port
 sp.on('data', function(input) {
@@ -142,13 +136,39 @@ sp.on('data', function(input) {
     var jsonData;
     try {
         jsonData = JSON.parse(buffer);
-        console.log('led: ' + jsonData.led);
+        console.log(jsonData);
     } catch(e) {
         // データ受信がおかしい場合無視する
         return;
     }
+
+    var itemValue = 0;
+    if(jsonData.item == 'Dolce Gusto' || jsonData.item == 'Special.T'){
+      value = 60;
+    }
+    else if(jsonData.item == 'GoldBrend Barista'){
+      value = 30;
+    }
+    else{
+      value = 0;
+      console.log("item name is unexpected");
+    }
+
+    var insertSql = 'INSERT INTO TEST VALUES(' +
+                    jsonData.time  + ','
+                    jsonData.name  + ','
+                    jsonData.item  + ','
+                    itemValue + ')'
+
+    connection.query(insertSql, function (err, rows) {
+      if(error){
+        console.log("insert data to DB failed.");
+        return;
+      }
+    });
+
     // つながっているクライアント全員に送信
-    io.sockets.emit('message', { value: jsonData.led });
+    //io.sockets.emit('message', { value: jsonData.led });
 });
 
 
