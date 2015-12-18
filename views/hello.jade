@@ -1,0 +1,32 @@
+dectype html
+  head
+    title #{title}
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="/javascripts/OnOff.js")
+    link(rel='stylesheet' href='/stylesheets/style.css')
+  
+
+  body
+    h1 #{title}
+    p
+        a(href="/hello?p1=hello&p2=bye") link
+
+    p(id="msg") #{msg}
+
+    h1 LEDの点灯/消灯
+    p(class="switch")
+    input(type ="checkbox" name="switch" id="switch")
+    label(for="switch")
+    input(type="button" id="sendBtn" value="send" onclick="SendMsg()")
+
+    form(id="form1" name="form1" method="post", action="/hello" onsubmit="return false;")
+        input(type="text", name="input1", value="#{input}")
+        input(type="button" id="btn" value="click" onclick="doAction()")
+
+    table
+        -for(var key in data){
+          tr
+            td #{key}
+            td #{data[key]}
+        -}
