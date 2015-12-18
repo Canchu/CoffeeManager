@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var serialport = require('serialport');
 var http = require('http');
-//var server = http.createServer(app);
+//var mysql = require('mysql');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -54,6 +54,7 @@ if (app.get('env') === 'development') {
   });
 }
 
+
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
@@ -63,6 +64,17 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+
+//connect DB
+/*
+var connection = mysql.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'user',
+  password: process.env.DB_PASS || 'NojiNoji',
+  database: process.env.DB_NAME || 'CoffeeManager_db'
+});*/
+
 
 // Serial Port
 var portName = '/dev/cu.usbmodem1411'; // Mac環境
@@ -106,6 +118,22 @@ io.sockets.on('connection', function(socket) {
         });
     });*/
 });
+
+//connectDB Action
+/*
+connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+  console.log('DBconnected as id ' + connection.threadId);
+   
+  connection.query('select * from test', function (err, rows) {
+    console.log(rows);
+    //res.render('users', { title: 'Express Users', users: rows });
+  });
+
+});*/
 
 // data from Serial port
 sp.on('data', function(input) {

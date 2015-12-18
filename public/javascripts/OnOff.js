@@ -33,6 +33,10 @@ $(function() {
             }
         }
     });
+
+    socket.on('DBmessage', function(msg) {
+        console.log(msg.value);
+    });
     
 });
 
@@ -48,7 +52,7 @@ $(function() {
         else {
             msg = "ON";
         }
-        
+
         // メッセージを送信する
         socket.emit('message', { value: msg });
     }
