@@ -31,14 +31,14 @@ router.get('/', function(req, res, next) {
 	var p1 = req.query['p1'];
 	var p2 = req.query.p2;
 	var msg = p1 == undefined ? "" : p1 + "," + p2;
-    var rowData;
+  var rowData;
 
     connection.query('select * from test', function (err, rows) {
-        //console.log(rows);
+        console.log(rows);
         //rowData = rows;
 
         res.render('hello', {
-            title: '今月のコーヒー購入リスト',
+            title: 'Nojima_Hirota Lab Coffee Manager',
             data: rows
         });
     });

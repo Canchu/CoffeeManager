@@ -1,34 +1,60 @@
-dectype html
+dectype
   head
     title #{title}
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
+    script(src="jquery.tablesorter.min.js")
     script(src="/socket.io/socket.io.js")
     script(src="/javascripts/OnOff.js")
-    link(rel='stylesheet' href='/stylesheets/style.css')
-  
-
+    script(src="/javascripts/Chart.js")
+    link(rel="stylesheet" href="/stylesheets/style.css")
+    
   body
     h1 #{title}
-    p
-        a(href="/hello?p1=hello&p2=bye") link
+    text 2016年
+    form#month_select(name="month_select" method="get")
+        p
+            select(name="month")
+                option(value="1") 1
+                option(value="2") 2
+                option(value="3") 3
+                option(value="4") 4 
+                option(value="5") 5
+                option(value="6") 6
+                option(value="7") 7
+                option(value="8") 8
+                option(value="9") 9
+                option(value="10") 10
+                option(value="11") 11 
+                option(value="12" selected="true") 12
+            text 月の売り上げ状況の
+        p
+            input(type="submit" value="データ取得！")
 
-    p(id="msg") #{msg}
+    h1 コーヒーマラソン
+    canvas#user_rank(height="300" width="600")
 
-    h1 LEDの点灯/消灯
-    p(class="switch")
-    input(type ="checkbox" name="switch" id="switch")
-    label(for="switch")
-    input(type="button" id="sendBtn" value="send" onclick="SendMsg()")
+    h1 コーヒーの種類別売り上げ
+    p　左：総売上金額 右：売り上げ個数
+    canvas#coffee_rank(height="300" width="500")
 
-    form(id="form1" name="form1" method="post", action="/hello" onsubmit="return false;")
-        input(type="text", name="input1", value="#{input}")
-        input(type="button" id="btn" value="click" onclick="doAction()")
 
-    table
-        -each key in data
-            tr
-                td #{key.time} 
-                td #{key.name}
-                td #{key.item}
-                td #{key.value}
+    h2 2016年1月の詳細データ
+    a(href="") csvをDL
+
+    p 各項目をクリックするとソートします
+    table#iall_data_table.all_data_table
+        thead
+            tr   
+                th 購入時刻
+                th 購入者  
+                th 購入品
+                th 値段  
+
+        tbody#user_data
+            -each key in data
+                tr
+                    td(name="date") #{key.time} 
+                    td #{key.name}
+                    td #{key.item}
+                    td #{key.value}
        
