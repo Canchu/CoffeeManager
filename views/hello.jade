@@ -1,6 +1,6 @@
 dectype
   head
-    title #{title}
+    title Nojima_Hirota Lab Coffee Manager
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
     script(src="jquery.tablesorter.min.js")
     script(src="/socket.io/socket.io.js")
@@ -9,40 +9,41 @@ dectype
     link(rel="stylesheet" href="/stylesheets/style.css")
     
   body
-    h1 #{title}
-    text 2016年
-    form#month_select(name="month_select" method="get")
-        p
-            select(name="month")
-                option(value="1") 1
-                option(value="2") 2
-                option(value="3") 3
-                option(value="4") 4 
-                option(value="5") 5
-                option(value="6") 6
-                option(value="7") 7
-                option(value="8") 8
-                option(value="9") 9
-                option(value="10") 10
-                option(value="11") 11 
-                option(value="12" selected="true") 12
-            text 月の売り上げ状況の
-        p
-            input(type="submit" value="データ取得！")
-
+    h1 Nojima_Hirota Lab Coffee Manager
+    
+    text 2015年
+        select#month(name="month")
+            option#Jan(value="1") 1
+            option#Feb(value="2") 2
+            option#Mar(value="3") 3
+            option#Apr(value="4") 4 
+            option#May(value="5") 5
+            option#Jun(value="6") 6
+            option#Jul(value="7") 7
+            option#Aug(value="8") 8
+            option#Sep(value="9") 9
+            option#Oct(value="10") 10
+            option#Nov(value="11") 11 
+            option#Dec(value="12") 12
+        text 月の売り上げ状況
+      
     h1 コーヒーマラソン
     canvas#user_rank(height="300" width="600")
 
     h1 コーヒーの種類別売り上げ
-    p　左：総売上金額 右：売り上げ個数
+    p 左：総売上金額 右：売り上げ個数
     canvas#coffee_rank(height="300" width="500")
 
 
-    h2 2016年1月の詳細データ
-    a(href="") csvをDL
+    h2 2015年 #{month} 月の詳細データ
+    form(method="post")
+        input(type="text" name="targetMonth" value="#{month}" hidden)
+        input#DL_csv(value="csvをDL" type="submit")
+    
+    text#csvName(hidden) #{csvFileName}
 
     p 各項目をクリックするとソートします
-    table#iall_data_table.all_data_table
+    table#all_data_table.all_data_table
         thead
             tr   
                 th 購入時刻

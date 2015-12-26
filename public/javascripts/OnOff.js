@@ -1,19 +1,49 @@
 $(function() {
-    
+
+/*****　webSocket ******/   
+    socket = io.connect('http://localhost:3000');
+
+    // WebSocketでの接続
+    socket.on('connect', function(msg) {
+        console.log("connect");
+    });
+
+    // メッセージを受けたとき
+    socket.on('message', function(msg) {
+        if (typeof msg.value != undefined) {
+            console.log(msg.value);
+            // LEDの状態を反映
+            if ( msg.value === 1) {
+                $('#switch').attr('checked', 'checked');
+            } else {
+                $('#switch').removeAttr('checked');
+            }
+        }
+    });
+
+    socket.on('DBmessage', function(msg) {
+        console.log(msg.value);
+    });
+/********************************/
+
+/*****　詳細データテーブルの日付表示 ******/
     var dateList = document.getElementsByName('date');  
     for(var i =0; i < dateList.length; i++){
         var str = comDateFormat(dateList[i].innerHTML);
         document.getElementsByName('date')[i].innerHTML = str;
     }
-    
+/********************************/
+
+/*****　テーブルにソート機能をつける ******/
     $('#all_data_table').tablesorter({
         headers:{
-            3:{sorter:false}
+            3:{sorter:false} //値段にはソートつけない
         }
     });
+/********************************/
 
-    socket = io.connect('http://localhost:3000');
 
+/*****　テーブルの値をtableDataに格納 ******/
     var tbl = document.getElementById('user_data');
     var tableData = {
                         time:[],
@@ -28,7 +58,10 @@ $(function() {
             tableData.item.push(tbl.rows[i].cells[2].innerHTML);
             tableData.value.push(tbl.rows[i].cells[3].innerHTML);
     }
-    
+/********************************/
+
+
+/*****　コーヒーレースと品物別売り上げのグラフ作成 ******/ 
     var allUserName = tableData.name.filter(function(x, i, self){
                         return self.indexOf(x) === i;
     });
@@ -39,9 +72,7 @@ $(function() {
     }
     for(var i=0; i < tableData.value.length; i++){
         for(var j=0; j< allUserName.length; j++){
-            if(tableData.name[i] == allUserName[j]){
-                priceByUser[j] += parseInt(tableData.value[i],10);
-            }
+            if(tableData.name[i] == allUserName[j])　priceByUser[j] += parseInt(tableData.value[i],10);
         }
     }
 
@@ -89,108 +120,75 @@ $(function() {
 
 
     var userRankBar = new Chart(document.getElementById("user_rank").getContext("2d")).Bar(user_RankData);
-    var coffeeRankBar = new Chart(document.getElementById("coffee_rank").getContext("2d")).Bar(coffee_RankData);
+    var coffeeRankBar = new Chart(document.getElementById("coffee_rank").getContext("2d")).Bar(coffee_RankData); 
+/********************************/
 
 
-    $('#switch').click(function() {
-        var msg = new Object();
-        if ($('#switch').attr('checked') === 'checked') {
-            console.log('ON');
-            msg.led = 'ON';
-        } else {
-            console.log('OFF');
-            msg.led = 'OFF';
+/*****　月の数字の表示と自動ページジャンプ******/ 
+    var query = window.location.search.substring(1);
+    var paramValue = query.split('=')[1];
+    var monthName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    if(paramValue == undefined){
+         var day = new Date();
+         paramValue = day.getMonth()+1;
+         $('#'+monthName[day.getMonth()]).attr('selected', 'true');
+    }
+
+    for(var i=0; i<12; i++){
+        if(i+1 == paramValue){
+            $('#'+monthName[i]).attr('selected', 'true');
         }
-        //メッセージを送信する
-        socket.emit('message', { value: msg });
-    });
+    }
 
+    changePageByMonth(paramValue);
+/********************************/
 
-    // WebSocketでの接続
-    socket.on('connect', function(msg) {
-        console.log("connect");
-    });
+  $('#DL_csv').live ('click', function(){
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:3000/hello',
+            data: paramValue,
+            success: function(){
+                 var day = new Date();
+                 var a = document.createElement('a');
+                 var csvFileName = "2015-"+ paramValue + "_" + (day.getMonth()+1) + "-" + day.getDate() + "-" + day.getHours() + "-" + day.getMinutes() + "-" + day.getSeconds() + ".csv";
 
-    // メッセージを受けたとき
-    socket.on('message', function(msg) {
-        if (typeof msg.value != undefined) {
-            console.log(msg.value);
-            // LEDの状態を反映
-            if ( msg.value === 1) {
-                $('#switch').attr('checked', 'checked');
-            } else {
-                $('#switch').removeAttr('checked');
+                 a.download = "2015-" +  paramValue + ".csv";
+                 a.hidden = "hidden";
+                 a.href = "http://localhost:3000/" + csvFileName;
+                 a.click();
             }
-        }
+        });
     });
-
-    socket.on('DBmessage', function(msg) {
-        console.log(msg.value);
-    });
-    
 });
 
-  //メッセージを送る
-function SendMsg() {
-        var msg = "";
-        var attr = typeof $('#switch').attr('checked');
 
-        console.log(attr);
-        if (attr == 'undefined') {
-            msg = "OFF";
-        }
-        else {
-            msg = "ON";
-        }
-
-        // メッセージを送信する
-        socket.emit('message', { value: msg });
+function changePageByMonth(paramValue){
+    var nowMonth = document.getElementById('month').value;
+    if(nowMonth - paramValue != 0){
+        window.location.href = "http://localhost:3000/hello?month=" + nowMonth;
+        return;
+    }
+    else if(paramValue == undefined){
+        return;
+    }
+    setTimeout("changePageByMonth("+ paramValue +")",500);
 }
 
-
+/*****　表の日付のフォーマットを整える ******/
 function comDateFormat(date){
         var detailDate = date.split(" ");
-
-        if(detailDate[1] == "Jan"){
-            detailDate[1] = 1;
-        }
-        else if(detailDate[1] == "Feb"){
-            detailDate[1] = 2;
-        }
-        else if(detailDate[1] == "Mar"){
-            detailDate[1] = 3;
-        }
-        else if(detailDate[1] == "Apr"){
-            detailDate[1] = 4;
-        }
-        else if(detailDate[1] == "May"){
-            detailDate[1] = 5;
-        }
-        else if(detailDate[1] == "Jun"){
-            detailDate[1] = 6;
-        }
-        else if(detailDate[1] == "July"){
-            detailDate[1] = 7;
-        }
-        else if(detailDate[1] == "Aug"){
-            detailDate[1] = 8;
-        }
-        else if(detailDate[1] == "Sep"){
-            detailDate[1] = 9;
-        }
-        else if(detailDate[1] == "Oct"){
-            detailDate[1] = 10;
-        }
-        else if(detailDate[1] == "Nov"){
-            detailDate[1] = 11;
-        }
-        else if(detailDate[1] == "Dec"){
-            detailDate[1] = 12;
+        var monthName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        
+        for(var i = 0; i<12; i++){
+            if(detailDate[1] == monthName[i]){
+                detailDate[1] = i+1;
+            }
         }
 
         var result = detailDate[3] + "年" + detailDate[1] + "月" 
                     + detailDate[2] + "日" + detailDate[0] + " "+detailDate[4];
 
         return result;
-
 }
+/********************************/
