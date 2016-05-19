@@ -1,34 +1,61 @@
-dectype html
+dectype
   head
-    title #{title}
+    title Nojima_Hirota Lab Coffee Manager
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
+    script(src="jquery.tablesorter.min.js")
     script(src="/socket.io/socket.io.js")
     script(src="/javascripts/OnOff.js")
-    link(rel='stylesheet' href='/stylesheets/style.css')
-  
-
+    script(src="/javascripts/Chart.js")
+    link(rel="stylesheet" href="/stylesheets/style.css")
+    
   body
-    h1 #{title}
-    p
-        a(href="/hello?p1=hello&p2=bye") link
+    h1 Nojima_Hirota Lab Coffee Manager
+    
+    text 2015年
+        select#month(name="month")
+            option#Jan(value="1") 1
+            option#Feb(value="2") 2
+            option#Mar(value="3") 3
+            option#Apr(value="4") 4 
+            option#May(value="5") 5
+            option#Jun(value="6") 6
+            option#Jul(value="7") 7
+            option#Aug(value="8") 8
+            option#Sep(value="9") 9
+            option#Oct(value="10") 10
+            option#Nov(value="11") 11 
+            option#Dec(value="12") 12
+        text 月の売り上げ状況
+      
+    h1 コーヒーマラソン
+    canvas#user_rank(height="300" width="600")
 
-    p(id="msg") #{msg}
+    h1 コーヒーの種類別売り上げ
+    p 左：総売上金額 右：売り上げ個数
+    canvas#coffee_rank(height="300" width="500")
 
-    h1 LEDの点灯/消灯
-    p(class="switch")
-    input(type ="checkbox" name="switch" id="switch")
-    label(for="switch")
-    input(type="button" id="sendBtn" value="send" onclick="SendMsg()")
 
-    form(id="form1" name="form1" method="post", action="/hello" onsubmit="return false;")
-        input(type="text", name="input1", value="#{input}")
-        input(type="button" id="btn" value="click" onclick="doAction()")
+    h2 2015年 #{month} 月の詳細データ
+    form(method="post")
+        input(type="text" name="targetMonth" value="#{month}" hidden)
+        input#DL_csv(value="csvをDL" type="submit")
+    
+    text#csvName(hidden) #{csvFileName}
 
-    table
-        -each key in data
-            tr
-                td #{key.time} 
-                td #{key.name}
-                td #{key.item}
-                td #{key.value}
+    p 各項目をクリックするとソートします
+    table#all_data_table.all_data_table
+        thead
+            tr   
+                th 購入時刻
+                th 購入者  
+                th 購入品
+                th 値段  
+
+        tbody#user_data
+            -each key in data
+                tr
+                    td(name="date") #{key.time} 
+                    td #{key.name}
+                    td #{key.item}
+                    td #{key.value}
        

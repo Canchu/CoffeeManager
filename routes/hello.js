@@ -25,35 +25,62 @@ connection.connect(function(err) {
     });
 });
 
-//console.log(tableRows);
+
+var rowData;
+
 /* GET hello page. */
 router.get('/', function(req, res, next) {
-	var p1 = req.query['p1'];
-	var p2 = req.query.p2;
-	var msg = p1 == undefined ? "" : p1 + "," + p2;
-    var rowData;
+  var month = req.query.month;
+  var day = new Date();
 
-    connection.query('select * from test', function (err, rows) {
-        //console.log(rows);
-        //rowData = rows;
+  if(month == undefined || month > 12 || month < 1){
+    month = day.getMonth()+1;
+  }
 
-        res.render('hello', {
-            title: '今月のコーヒー購入リスト',
-            data: rows
-        });
-    });
+  var startDate = '2015-' + month + '-01';
+  var endDate   = '2015-' + month + '-31';
+  var sql = "select * from test where time >= '" + startDate + "'and time <= '" + endDate + "'";
+
+  connection.query(sql, function (err, rows) {
+      rowData = rows;
+      if(err){
+        console.log("table SQL error!",err);
+      }
+      res.render('hello', {
+          month: month,
+          //dlLink: csvFileName,
+          data: rows
+      });
+  });
 });
 
 /* POST hello page. */
 router.post('/', function(req, res, next) {
-    var str = req.query.input1;
-        res.json(
-            {msg: str}
-        );
+  var month = req.body['targetMonth'];
+  var day = new Date();
+
+  if(month == undefined || month > 12 || month < 1){
+    month = day.getMonth()+1;
+  }
+
+  var csvFileName = "2015-"+ month + "_" + (day.getMonth()+1) + "-" + day.getDate() + "-" + day.getHours() + "-" + day.getMinutes() + "-" + day.getSeconds() + ".csv";
+
+  var startDate = '2015-' + month + '-01';
+  var endDate   = '2015-' + month + '-31';
+  var sql = "select * from test where time >= '" + startDate + "'and time <= '" + endDate + "'";
+  var csvSql = sql + " into outfile '/Users/masakiayano/Desktop/CoffeeManager/public/" + csvFileName + "' FIELDS TERMINATED BY ',' ";
+  
+  connection.query(csvSql, function (err, data) {
+    if(err){
+        console.log("csv SQL error!", err);
+    }
+    res.render('hello', {
+          month: month,
+          data: rowData,
+          csvFileName: csvFileName
+      });
+  });
+
 });
 
-
-
-
 module.exports = router;
-//app.get('/hello', hello.hello);

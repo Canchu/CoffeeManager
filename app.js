@@ -77,6 +77,7 @@ var connection = mysql.createConnection({
 
 
 // Serial Port
+/*
 var portName = '/dev/cu.usbmodem1411'; // Mac環境
 var sp = new serialport.SerialPort(portName, {
     baudRate: 115200,
@@ -86,7 +87,7 @@ var sp = new serialport.SerialPort(portName, {
     flowControl: false,
     parser: serialport.parsers.readline("\n")   // ※修正：パースの単位を改行で行う
 });
-
+*/
   
 // クライアントが接続してきたときの処理
 io.sockets.on('connection', function(socket) {
@@ -130,6 +131,7 @@ connection.connect(function(err) {
 
 
 // data from Serial port
+/*
 sp.on('data', function(input) {
 
     var buffer = new Buffer(input, 'utf8');
@@ -170,6 +172,6 @@ sp.on('data', function(input) {
     // つながっているクライアント全員に送信
     //io.sockets.emit('message', { value: jsonData.led });
 });
-
+*/
 
 module.exports = app;
