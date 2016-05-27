@@ -4,4 +4,5 @@
 import time
 
 if __name__ == '__main__':
-	print 'Hello'
+	datetime_jst = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
+	print datetime_jst
