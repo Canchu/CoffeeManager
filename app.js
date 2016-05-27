@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var serialport = require('serialport');
 var http = require('http');
 var mysql = require('mysql');
+var fs = require('fs');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -21,8 +22,6 @@ server.listen(3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -67,7 +66,6 @@ app.use(function(err, req, res, next) {
 
 
 //connect DB
-
 var connection = mysql.createConnection({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'user',
@@ -76,28 +74,14 @@ var connection = mysql.createConnection({
 });
 
 
-// Serial Port
-/*
-var portName = '/dev/cu.usbmodem1411'; // Mac環境
-var sp = new serialport.SerialPort(portName, {
-    baudRate: 115200,
-    dataBits: 8,
-    parity: 'none',
-    stopBits: 1,
-    flowControl: false,
-    parser: serialport.parsers.readline("\n")   // ※修正：パースの単位を改行で行う
-});
-*/
   
 // クライアントが接続してきたときの処理
 io.sockets.on('connection', function(socket) {
-    console.log("connection");
-
     // メッセージを受けたときの処理
     socket.on('message', function(data) {
-        console.log(data.value);
+        //console.log(data.value);
         // つながっているクライアント全員に送信
-        //socket.broadcast.json.emit('message', { value: data.value });
+        socket.broadcast.json.emit('message', { value: data.value });
 
         console.log('Client sent us: ' + data.value);
         sp.write(data.value, function(err, bytesWritten) {
@@ -109,15 +93,6 @@ io.sockets.on('connection', function(socket) {
     socket.on('disconnect', function(){
         console.log("disconnect");
     });
-
-    // data for Serial port 
-    /*socket.on('sendSerial', function(data) {
-        var receive = JSON.stringify(data);
-        console.log('Client sent us: ' + receive);
-        sp.write(receive, function(err, bytesWritten) {
-            console.log('bytes written: ', bytesWritten);
-        });
-    });*/
 });
 
 //connect with DB
@@ -130,48 +105,57 @@ connection.connect(function(err) {
 });
 
 
-// data from Serial port
-/*
-sp.on('data', function(input) {
 
-    var buffer = new Buffer(input, 'utf8');
-    var jsonData;
-    try {
-        jsonData = JSON.parse(buffer);
-        console.log(jsonData);
-    } catch(e) {
-        // データ受信がおかしい場合無視する
-        return;
+//JSONを読み込む
+//どのタイミングでJSONが更新されたことをしるの?httpリクエストでもいいけど、
+//更新タイミングが不明　定期的にみはっとく？
+//前回のjsonとTimeが異なれば更新としてみなす？
+
+var json = fs.readFileSync("user.json", "utf-8");
+var id = JSON.parse(json).ID;
+var time = JSON.parse(json).Time;
+var drink = JSON.parse(json).Drink;
+
+var sql = "select name from test_id where id == '" + id +  "'";
+var sql = "select name from test_id where id == '" + id +  "'";
+
+connection.query(sql, function (err, rows) {
+    name = rows;
+    console.log(rows);
+    if(err){
+      console.log("table SQL error!",err);
     }
 
-    var itemValue = 0;
-    if(jsonData.item == 'Dolce Gusto' || jsonData.item == 'Special.T'){
-      value = 60;
-    }
-    else if(jsonData.item == 'GoldBrend Barista'){
-      value = 30;
+    if(name == null || name == ""){
+      console.log("not registerd ID!");
     }
     else{
-      value = 0;
-      console.log("item name is unexpected");
-    }
+      var price=0;
 
-    var insertSql = 'INSERT INTO TEST VALUES(' +
-                    jsonData.time  + ','
-                    jsonData.name  + ','
-                    jsonData.item  + ','
-                    itemValue + ')'
-
-    connection.query(insertSql, function (err, rows) {
-      if(error){
-        console.log("insert data to DB failed.");
-        return;
+      if(drink == 'Dolce Gusto' || drink == 'Special.T'){
+        price = 60;
       }
-    });
+      else if(drink == 'GoldBrend Barista'){
+        price = 30;
+      }
+      else{
+        price = 0;
+        console.log("item name is unexpected");
+      }
 
-    // つながっているクライアント全員に送信
-    //io.sockets.emit('message', { value: jsonData.led });
+      var insertSql = 'INSERT INTO TEST VALUES(' +
+                    time  + ','
+                    name  + ','
+                    drink  + ','
+                    price + ')';
+
+       connection.query(insertSql, function (err, rows) {
+          if(error){
+            console.log("insert data to DB failed.");
+            return;
+          }
+        });
+    }
 });
-*/
 
 module.exports = app;
