@@ -1,8 +1,15 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import RPi.GPIO as GPIO
 import time
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(17, GPIO.IN)
+sw = [17, 23, 24, 27]
+
+def initGPIO():
+    GPIO.setmode(GPIO.BCM)
+    for i in range(len(sw)):
+        GPIO.setup(sw[i], GPIO.IN)
 
 while True:
     var = GPIO.input(17)
@@ -10,3 +17,4 @@ while True:
         print 'Switch is pushed'
         break
 
+GPIO.cleanup()
