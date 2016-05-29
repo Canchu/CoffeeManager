@@ -4,17 +4,30 @@
 import RPi.GPIO as GPIO
 import time
 
-sw = [17, 23, 24, 27]
-
-def initGPIO():
+def initSwitches(sw):
     GPIO.setmode(GPIO.BCM)
     for i in range(len(sw)):
         GPIO.setup(sw[i], GPIO.IN)
 
-while True:
-    var = GPIO.input(17)
-    if (var < 1):
-        print 'Switch is pushed'
-        break
+def readSwitches(sw):
+	state = []
+	for i in range(len(sw)):
+		state.append = GPIO.input(sw[i])
+	return state
 
-GPIO.cleanup()
+def wateSwitches(sw):
+	state = []
+	while True:
+		state = readSwitches(sw)
+		if (0 in state):
+			return state.index(0)
+
+def main():
+	sw = [17, 23, 24, 27]
+	initSwitches(sw)
+	sw_id = wateSwitches(sw)
+	print 'Switch' + str(sw_id) + ' is pushed.'
+	GPIO.cleanup()
+
+if __name__ == '__main__':
+	main()
