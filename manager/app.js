@@ -24,28 +24,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/',function(req, res){
   var id = "";
-
+  var name = "未登録IDです";
+    
   if(!req.query.id){
     console.log("get error!");
   }
   else{
     id = req.query.id;
-
     //idでユーザー名をとってくる
     var sql = "select name from test_id where id = '" + id +  "'";
 
     //DBに接続
     connection.query(sql, function (err, rows) {
-      
       if(err){
         console.log("table SQL error!",err);
       }
 
-      if(rows != {}){
-         name = rows[0].name;
-      }
-      else{
-         name = "未登録IDです";
+      if(rows.length != 0){
+        name = rows[0].name;
       }
       //res.render(name);
       res.json({'name': name}); 
@@ -64,7 +60,6 @@ app.post('/', function(req, res){
     return;
   }
 
-  console.log(json);
   //jsonのデータをだす
   var id = JSON.parse(json).id;
   var date = JSON.parse(json).date;
@@ -92,32 +87,33 @@ app.post('/', function(req, res){
     console.log("Error! cannot find id=" + id + " drink name");
     return;
   }
-
   
   //idでユーザ名をとってくる
-
   var sql = "select name from test_id where id = '" + id +  "'";
   connection.query(sql, function (err, rows) {
-      if(err){
-        console.log("table SQL error!",err);
-      }
-      if(rows != {}){
-         user_name = rows[0].name;
-      }
-      else{
-         user_name = "未登録IDです";
-      }
+    if(err){
+      console.log("table SQL error!",err);
+    }
 
-    console.log(user_name);
+    if(rows.length != 0){
+      user_name = rows[0].name;
+    }
+    else{
+      console.log("ID is not defined");
+      return;
+    }
+
     //id,date,drinkをjsonでpostするとデータベースを更新する
     var insertSql = "INSERT INTO TEST VALUES('" + date + "','"
                     + user_name  + "','"
                     + drink  + "','"
                     + price + "');";
     
+    console.log(insertSql);
     connection.query(insertSql, function (err, rows) {
       if(err){
         console.log("insert data to DB failed.");
+        console.log(err);
         return;
       }
     });
