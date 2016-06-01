@@ -53,6 +53,90 @@ if (app.get('env') === 'development') {
   });
 }
 
+//getパラメータを受けとり、からでなければDBに問い合わせ、ユーザー名を返す
+app.get('/',function(req, res)){
+  var id = "";
+
+  if(req.query.id){
+    id = req.query.id;
+  }
+
+  //idでユーザー名をとってくる
+  var sql = "select name from test_id where id = '" + id +  "'";
+
+  //DBに接続
+  connection.query(sql, function (err, rows) {
+    name = rows;
+    console.log(rows);
+    
+    if(err){
+        console.log("table SQL error!",err);
+    }
+
+    if(name == null || name == ""){
+        console.log("not registerd ID!");
+        return;
+    }
+    
+    console.log(name);
+    res.json({'name': name}); 
+}
+
+//postでJSONを読み込む
+
+app.post('/', function(req, res){
+  console.log(req);
+
+  if(req.body){
+    var json = req.body;
+  }
+  else{
+    console.log("Error! post json cannot read");
+    return;
+  }
+
+  //jsonのデータをだす
+  var id = JSON.parse(json).ID;
+  var time = JSON.parse(json).Time;
+  var drink = JSON.parse(json).Drink;
+  var price;
+
+  if(drink == 0){
+    drink = "Barsita";
+    price = 30;
+  }
+  else if(drink == 1){
+    drink = "Dolce gusto";
+    price = 60;
+  }
+  else if(drink == 2){
+     drink = "Dolce gusto w/ milk";
+     price = 120;
+  }
+  else if(drink == 3{
+     drink = "Special T";
+     price = 60;
+  }
+  else{
+    console.log("Error! cannot find id=" + id + " drink name");
+    return;
+  }
+
+  //id,date,drinkをjsonでpostするとデータベースを更新する
+  var insertSql = "INSERT INTO TEST VALUES('" +
+                    time  + "','"
+                    name  + "','"
+                    drink  + "','"
+                    price + "')'";
+
+  connection.query(insertSql, function (err, rows) {
+    if(error){
+      console.log("insert data to DB failed.");
+      return;
+    }
+  });
+});
+
 
 // production error handler
 // no stacktraces leaked to user
@@ -104,58 +188,5 @@ connection.connect(function(err) {
   console.log('DBconnected as id ' + connection.threadId);
 });
 
-
-
-//JSONを読み込む
-//どのタイミングでJSONが更新されたことをしるの?httpリクエストでもいいけど、
-//更新タイミングが不明　定期的にみはっとく？
-//前回のjsonとTimeが異なれば更新としてみなす？
-
-var json = fs.readFileSync("user.json", "utf-8");
-var id = JSON.parse(json).ID;
-var time = JSON.parse(json).Time;
-var drink = JSON.parse(json).Drink;
-
-var sql = "select name from test_id where id == '" + id +  "'";
-var sql = "select name from test_id where id == '" + id +  "'";
-
-connection.query(sql, function (err, rows) {
-    name = rows;
-    console.log(rows);
-    if(err){
-      console.log("table SQL error!",err);
-    }
-
-    if(name == null || name == ""){
-      console.log("not registerd ID!");
-    }
-    else{
-      var price=0;
-
-      if(drink == 'Dolce Gusto' || drink == 'Special.T'){
-        price = 60;
-      }
-      else if(drink == 'GoldBrend Barista'){
-        price = 30;
-      }
-      else{
-        price = 0;
-        console.log("item name is unexpected");
-      }
-
-      var insertSql = 'INSERT INTO TEST VALUES(' +
-                    time  + ','
-                    name  + ','
-                    drink  + ','
-                    price + ')';
-
-       connection.query(insertSql, function (err, rows) {
-          if(error){
-            console.log("insert data to DB failed.");
-            return;
-          }
-        });
-    }
-});
 
 module.exports = app;
