@@ -10,7 +10,7 @@ def connected(tag):
     elif isinstance(tag, nfc.tag.tt2.Type2Tag):
         print str(tag.uid).encode("hex")
     elif isinstance(tag, nfc.tag.tt3.Type3Tag):
-        print 'IDm = 'str(tag.idm).encode("hex")
+        print 'IDm = ' + str(tag.idm).encode("hex")
     elif isinstance(tag, nfc.tag.tt4.Type4Tag):
         print str(tag.uid).encode("hex")
     else:
