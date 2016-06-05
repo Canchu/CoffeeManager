@@ -15,8 +15,8 @@ def getUsername(nfc_id):
 
 
 def postPayment(nfc_id):
-	uri = 'http://127.0.0.1:5000/post'
-	datetime_jst = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
+	uri = 'http://127.0.0.1:3000/'
+	datetime_jst = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 	header = {'Content-Type': 'application/json; charset=utf-8'}
 	payload = {
 		'id': nfc_id,
