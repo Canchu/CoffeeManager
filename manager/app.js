@@ -20,7 +20,7 @@ app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/',function(req, res){
+app.get('/api/get/username',function(req, res){
   var id = "";
   var name = "未登録IDです";
     
@@ -48,7 +48,7 @@ app.get('/',function(req, res){
 });
 
 //postでjsonという名前のパラメータで渡されてくるJSONを読み込む
-app.post('/', jsonParser, function(req, res){
+app.post('/api/post/payment', jsonParser, function(req, res){
 
   if(!req.body){
     console.log("Error! post json cannot read");
