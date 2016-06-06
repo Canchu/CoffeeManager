@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var serialport = require('serialport');
 var http = require('http');
 var mysql = require('mysql');
 var fs = require('fs');
@@ -14,15 +13,14 @@ var users = require('./routes/users');
 var hello = require('./routes/hello');
 
 var app = express();
-//var server = http.createServer(app);
-//var io = require('socket.io').listen(server);
+
+var jsonParser = bodyParser.json();
+
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/',function(req, res){
+app.get('/api/get/username',function(req, res){
   var id = "";
   var name = "未登録IDです";
     
@@ -50,20 +48,17 @@ app.get('/',function(req, res){
 });
 
 //postでjsonという名前のパラメータで渡されてくるJSONを読み込む
-app.post('/', function(req, res){
+app.post('/api/post/payment', jsonParser, function(req, res){
 
-  if(req.body){
-    var json = req.body.json;
-  }
-  else{
+  if(!req.body){
     console.log("Error! post json cannot read");
-    return;
+	return;
   }
 
   //jsonのデータをだす
-  var id = JSON.parse(json).id;
-  var date = JSON.parse(json).date;
-  var drink = JSON.parse(json).drink;
+  var id = req.body.id;
+  var date = req.body.date;
+  var drink = req.body.drink;
   var price;
   var user_name;
 
@@ -104,7 +99,7 @@ app.post('/', function(req, res){
     }
 
     //id,date,drinkをjsonでpostするとデータベースを更新する
-    var insertSql = "INSERT INTO TEST VALUES('" + date + "','"
+    var insertSql = "INSERT INTO test VALUES('" + date + "','"
                     + user_name  + "','"
                     + drink  + "','"
                     + price + "');";
@@ -119,6 +114,8 @@ app.post('/', function(req, res){
     });
 
   });
+
+  res.send('payment success');
 });
 
 
