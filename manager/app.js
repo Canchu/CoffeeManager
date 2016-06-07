@@ -11,7 +11,7 @@ var fs = require('fs');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var hello = require('./routes/hello');
+var coffeeMarathon = require('./routes/coffeeMarathon');
 
 var app = express();
 //var server = http.createServer(app);
@@ -130,7 +130,7 @@ app.set('view engine', 'jade');
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/hello', hello);
+app.use('/coffeeMarathon', coffeeMarathon);
 
 
 
