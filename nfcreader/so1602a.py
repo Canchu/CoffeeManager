@@ -16,9 +16,13 @@ class SO1602A():
 		else:
 			self.addr = 0x3d
 
+		# Clear Display
 		self.bus.write_byte_data(self.addr, 0x00, 0x01)
+		# Return Home
 		self.bus.write_byte_data(self.addr, 0x00, 0x02)
-		self.bus.write_byte_data(self.addr, 0x00, 0x0e)
+		# Display On
+		self.bus.write_byte_data(self.addr, 0x00, 0x0c)
+		# Clear Display
 		self.bus.write_byte_data(self.addr, 0x00, 0x01)
 
 	def writeLine(self, str = '', line = 0):
@@ -33,6 +37,17 @@ class SO1602A():
 
 	def clearDisp(self):
 		self.bus.write_byte_data(self.addr, 0x00, 0x01)
+
+	def displayOn(self, cursor = False, blink = False):
+		cmd = 0x0c
+		if (cursor):
+			cmd += 0x02
+		if (blink):
+			cmd += 0x01
+		self.bus.write_byte_data(self.addr, 0x00, cmd)
+
+	def displayOff(self):
+		self.bus.write_byte_data(self.addr, 0x00, 0x08)
 
 def main():
 	oled = SO1602A(sa0 = 0)
