@@ -7,21 +7,21 @@ import json
 
 
 def getUsername(nfc_id):
-	uri = 'http://127.0.0.1:5000/get'
+	uri = 'http://127.0.0.1:3000/api/get/username'
 	params = {'id': nfc_id}
 	response = requests.get(uri, params = params)
 
 	return response
 
 
-def postPayment(nfc_id):
-	uri = 'http://127.0.0.1:5000/post'
-	datetime_jst = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
+def postPayment(nfc_id, drink):
+	uri = 'http://127.0.0.1:3000/api/post/payment'
+	datetime_jst = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 	header = {'Content-Type': 'application/json; charset=utf-8'}
 	payload = {
 		'id': nfc_id,
 		'date': datetime_jst,
-		'drink': '1'
+		'drink': str(drink)
 	}
 	response = requests.post(uri, data = json.dumps(payload), headers = header)
 
