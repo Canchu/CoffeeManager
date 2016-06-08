@@ -2,7 +2,8 @@ Thumbs.db
 .DS_Store
 
 node_modules
-
 *.log
 
 *.pyc
+
+*.swp

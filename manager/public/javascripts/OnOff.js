@@ -1,6 +1,6 @@
 $(function() {
 
-/*****　webSocket ******/   
+/*****　webSocket ******
     socket = io.connect('http://localhost:3000');
 
     // WebSocketでの接続
@@ -24,7 +24,7 @@ $(function() {
     socket.on('DBmessage', function(msg) {
         console.log(msg.value);
     });
-/********************************/
+********************************/
 
 /*****　詳細データテーブルの日付表示 ******/
     var dateList = document.getElementsByName('date');  
@@ -151,9 +151,9 @@ $(function() {
             success: function(){
                  var day = new Date();
                  var a = document.createElement('a');
-                 var csvFileName = "2015-"+ paramValue + "_" + (day.getMonth()+1) + "-" + day.getDate() + "-" + day.getHours() + "-" + day.getMinutes() + "-" + day.getSeconds() + ".csv";
+                 var csvFileName = "2016-"+ paramValue + "_" + (day.getMonth()+1) + "-" + day.getDate() + "-" + day.getHours() + "-" + day.getMinutes() + "-" + day.getSeconds() + ".csv";
 
-                 a.download = "2015-" +  paramValue + ".csv";
+                 a.download = "2016-" +  paramValue + ".csv";
                  a.hidden = "hidden";
                  a.href = "http://localhost:3000/" + csvFileName;
                  a.click();
