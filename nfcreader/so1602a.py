@@ -35,7 +35,6 @@ class SO1602A():
 
 		for i in range(len(str)):
 			self.bus.write_byte_data(self.addr, 0x40, ord(str[i]))
-			time.sleep(0.05)
 
 	def clearDisplay(self):
 		self.bus.write_byte_data(self.addr, 0x00, 0x01)
