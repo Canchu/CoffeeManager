@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/get/username',function(req, res){
   var id = "";
-  var name = "未登録IDです";
+  var name = "unregistered";
     
   if(!req.query.id){
     console.log("get error!");
