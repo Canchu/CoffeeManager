@@ -41,31 +41,62 @@ def beep(pin, num = 2):
 def main():
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(27, GPIO.OUT)
-	GPIO.setup(24, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+
+	switches = [17, 24]
+	states = [1] * len(switches)
+
+	for sw in switches:
+		GPIO.setup(sw, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+	
+	drinks = {
+		"17": 0,
+		"24": 1
+	}
 
 	oled = SO1602A(sa0 = 0)
-	oled.writeLine('Please touch', line = 0)
-	oled.writeLine('your ID card', line = 1, align = 'right')
-
 	reader = nfcReader()
-	reader.waitContact()
-	beep(27)
 
-	name = str(getUsername(reader.id).json()['name'])
+	try:
+		while True:
+			oled.writeLine('Please touch', line = 0)
+			oled.writeLine('your ID card', line = 1, align = 'right')
 
-	oled.writeLine('Hello ' + name)
-	oled.writeLine('Choose ur drink', line = 1)
+			reader.waitContact()
+			beep(27)
 
-	while GPIO.input(24) == 1:
-		pass
-	
-	res = postPayment(reader.id, 1)
+			name = str(getUsername(reader.id).json()['name'])
 
-	oled.clearDisplay()
-	oled.writeLine('Thank you!')
-	beep(27, 3)
+			if (name == 'unregistered'):
+				oled.clearDisplay()
+				oled.writeLine('ERROR:')
+				oled.writeLine('Unregistered ID', line = 1)
+				time.sleep(2)
+				continue
+
+			oled.writeLine('Hello ' + name)
+			oled.writeLine('Choose ur drink', line = 1)
+
+			while True:
+				for i, sw in enumerate(switches):
+					states[i] = GPIO.input(sw)
+				if (states.count(0) == 1):
+					drink = states.index(0)
+					break
+					
+			res = postPayment(reader.id, drink)
+
+			oled.clearDisplay()
+			oled.writeLine('Thank you!')
+			beep(27, 3)
+
+			time.sleep(3)
+
+	except KeyboardInterrupt:
+		print 'detect KeyboardInterrupt'
 
 	GPIO.cleanup()
+	oled.clearDisplay()
+	oled.displayOff()
 
 if __name__ == '__main__':
 	main()
