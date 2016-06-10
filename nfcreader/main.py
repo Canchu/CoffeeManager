@@ -31,16 +31,24 @@ def postPayment(nfc_id, drink):
 
 	return response
 
-def beep(pin, num = 2):
-	for i in range(num):
-		GPIO.output(27, 1)
-		time.sleep(0.08)
-		GPIO.output(27, 0)
-		time.sleep(0.03)
+def beep(pin, num = 2, err = False):
+	if (err):
+		for i in range(num):
+			GPIO.output(pin, 1)
+			time.sleep(0.2)
+			GPIO.output(pin, 0)
+			time.sleep(0.05)
+	else:
+		for i in range(num):
+			GPIO.output(pin, 1)
+			time.sleep(0.08)
+			GPIO.output(pin, 0)
+			time.sleep(0.03)
 
 def main():
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(27, GPIO.OUT)
+	GPIO.output(27, 0)
 
 	switches = [17, 24]
 	states = [1] * len(switches)
@@ -62,7 +70,6 @@ def main():
 			oled.writeLine('your ID card', line = 1, align = 'right')
 
 			reader.waitContact()
-			beep(27)
 
 			name = str(getUsername(reader.id).json()['name'])
 
@@ -70,8 +77,11 @@ def main():
 				oled.clearDisplay()
 				oled.writeLine('ERROR:')
 				oled.writeLine('Unregistered ID', line = 1)
+				beep(27, err = True)
 				time.sleep(2)
 				continue
+
+			beep(27)
 
 			oled.writeLine('Hello ' + name)
 			oled.writeLine('Choose ur drink', line = 1)
