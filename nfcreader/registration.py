@@ -3,6 +3,9 @@
 
 import MySQLdb
 import requests
+import time
+
+import RPi.GPIO as GPIO
 
 from so1602a import SO1602A
 from nfcreader import nfcReader
@@ -31,6 +34,11 @@ def beep(pin, num = 2, err = False):
 			time.sleep(0.03)
 
 def main():
+	bell = 27
+	
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setup(bell, GPIO.OUT)
+
 	oled = SO1602A(sa0 = 0)
 	reader = nfcReader()
 
@@ -42,20 +50,38 @@ def main():
 	name = getUsername(reader.id)
 	
 	if (name == 'unregistered'):
-		connection = MySQLdb.connect(db = 'CoffeeManager_db', user = 'user', passwd='NojiNoji')
+		beep(bell)
+
+		oled.clearDisplay()
+		oled.displayOff()
+
+		print 'please input your username'
+		username = raw_input()
+
+		print 'please input your email'
+		email = raw_input()
+
+		connection = MySQLdb.connect(
+			db = 'CoffeeManager_db',
+			user = 'user',
+			passwd='NojiNoji')
 		cursor = connection.cursor()
 
-		sentence = "insert into test_id (id, name) value ('" + reader.id + "', '" + name + "')"
-		print sentence
-		cursor.execute(sentence)
+		sql = "INSERT INTO test_id (id, name, email) VALUES ('%s', '%s', '%s')" % (reader.id, username, email)
+		print(cursor.execute(sql))
+		connection.commit()
 
 		cursor.close()
 		connection.close()
 	else:
+		beep(bell, err = True)
 		print 'Already registered'
+		print '%5s: %s' % ('Name', name)
+		print '%5s: %s' % ('ID', reader.id)
+		oled.clearDisplay()
+		oled.displayOff()
 	
-	oled.clearDisplay()
-	oled.displayOff()
+	GPIO.cleanup()
 
 if __name__ == '__main__':
 	main()

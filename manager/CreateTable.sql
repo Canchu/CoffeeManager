@@ -7,5 +7,6 @@ create table test (
 
 create table test_id (
 	id varchar(255) primary key,
-    name varchar(255)
+    name varchar(255),
+	email varchar(255)
 );
