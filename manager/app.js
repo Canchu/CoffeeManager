@@ -63,7 +63,7 @@ app.post('/api/post/payment', jsonParser, function(req, res){
   var user_name;
 
   if(drink == 0){
-    drink = "Barsita";
+    drink = "Barista";
     price = 30;
   }
   else if(drink == 1){
@@ -71,7 +71,7 @@ app.post('/api/post/payment', jsonParser, function(req, res){
     price = 60;
   }
   else if(drink == 2){
-     drink = "Dolce gusto w/ milk";
+     drink = "Dolce gusto with milk";
      price = 120;
   }
   else if(drink == 3){
