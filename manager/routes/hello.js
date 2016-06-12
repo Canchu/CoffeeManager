@@ -47,16 +47,17 @@ router.get('/', function(req, res, next) {
   var sql = "select * from test where time >= '" + startDate + "'and time <= '" + endDate + "'";
 
   connection.query(sql, function (err, rows) {
-      rowData = rows;
-      if(err){
-        console.log("table SQL error!",err);
-      }
-      res.render('hello', {
-          year: year,
-          month: month,
-          //dlLink: csvFileName,
-          data: rows
-      });
+    rowData = rows;
+    if(err){
+      console.log("table SQL error!",err);
+    }
+    console.log(rowData);
+    res.render('hello', {
+      year: year,
+      month: month,
+      //dlLink: csvFileName,
+      data: rowData
+    });
   });
 });
 

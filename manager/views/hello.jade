@@ -1,10 +1,10 @@
 dectype
   head
     title Nojima_Hirota Lab Coffee Manager
-    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
-    script(src="jquery.tablesorter.min.js")
-    script(src="/javascripts/OnOff.js")
-    script(src="/javascripts/Chart.js")
+    script(type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
+    script(type='text/javascript' src="jquery.tablesorter.min.js")
+    script(type='text/javascript' src="/javascripts/OnOff.js")
+    script(type='text/javascript' src="/javascripts/Chart.js")
     link(rel="stylesheet" href="/stylesheets/style.css")
     link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.min.css')
     link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
@@ -13,6 +13,7 @@ dectype
   body
     .container
         h1 Nojima_Hirota Lab Coffee Manager
+        p#price Hello
 
         text #{year}年
             select#month(name="month")
@@ -38,7 +39,7 @@ dectype
         canvas#coffee_rank(height="300" width="500")
 
 
-        h2 2015年 #{month} 月の詳細データ
+        h2 #{year}年 #{month} 月の詳細データ
         form(method="post")
             input(type="text" name="targetMonth" value="#{month}" hidden)
             input#DL_csv(value="csvをDL" type="submit")
@@ -52,10 +53,10 @@ dectype
                     th 購入時刻
                     th 購入者  
                     th 購入品
-                    th 値段  
+                    th 値段
 
             tbody#user_data
-                -each key in data
+                each key in data
                     tr
                         td(name="date") #{key.time} 
                         td #{key.name}
