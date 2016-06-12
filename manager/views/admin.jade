@@ -2,12 +2,17 @@ doctype html
 html(lang=ja)
 	head
 		title admin page
-		link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.min.css')
-		link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
-		script(type='text/javascript', src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+		link(rel='stylesheet', href='components/bootstrap/dist/css/bootstrap.min.css')
+		link(rel='stylesheet', href='components/bootstrap/dist/css/bootstrap-theme.min.css')
+		script(type='text/javascript', src='components/bootstrap/dist/js/bootstrap.min.js')
+		script(type='text/javascript', src='components/bootstrap/dist/js/npm.js')
+		script(type='text/javascript', src='components/jquery/dist/jquery.min.js')
 	body
 		.container
-			h1= title
+			h1 Admin Page of Coffee Manager
+
+			h2 Registered Users
+
 			table.table.table-striped
 				tr
 					th Name
@@ -16,3 +21,6 @@ html(lang=ja)
 					tr
 						td #{val.name}
 						td #{val.id}
+
+			h2 Log Information
+
