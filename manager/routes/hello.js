@@ -30,6 +30,7 @@ var rowData;
 
 /* GET hello page. */
 router.get('/', function(req, res, next) {
+  var year = '2016';
   var month = req.query.month;
   var day = new Date();
 
@@ -37,8 +38,8 @@ router.get('/', function(req, res, next) {
     month = day.getMonth()+1;
   }
 
-  var startDate = '2015-' + month + '-01';
-  var endDate   = '2015-' + month + '-31';
+  var startDate = year + '-' + month + '-01';
+  var endDate   = year + '-' + month + '-31';
   var sql = "select * from test where time >= '" + startDate + "'and time <= '" + endDate + "'";
 
   connection.query(sql, function (err, rows) {
