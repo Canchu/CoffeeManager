@@ -11,6 +11,7 @@ var fs = require('fs');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var hello = require('./routes/hello');
+var admin = require('./routes/admin');
 
 var app = express();
 
@@ -128,6 +129,7 @@ app.set('view engine', 'jade');
 app.use('/', routes);
 app.use('/users', users);
 app.use('/hello', hello);
+app.use('/admin', admin);
 
 
 
