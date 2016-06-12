@@ -30,9 +30,13 @@ var rowData;
 
 /* GET hello page. */
 router.get('/', function(req, res, next) {
-  var year = '2016';
+  var year = req.query.year;
   var month = req.query.month;
   var day = new Date();
+
+  if(year == undefined || month > 12 || month < 1){
+    year = day.getFullYear();
+  }
 
   if(month == undefined || month > 12 || month < 1){
     month = day.getMonth()+1;
@@ -48,6 +52,7 @@ router.get('/', function(req, res, next) {
         console.log("table SQL error!",err);
       }
       res.render('hello', {
+          year: year,
           month: month,
           //dlLink: csvFileName,
           data: rows
