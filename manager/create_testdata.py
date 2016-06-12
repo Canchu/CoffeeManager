@@ -69,6 +69,20 @@ for _ in range(RECORD_COUNT):
     "VALUES ('{}', '{}', '{}', '{}');\n"\
     .format(date, name, drink, price)
 
+for _ in range(RECORD_COUNT):
+
+    # 登録するランダムなデータの生成
+    date = randomDate("2016-4-1 00:00:00", "2016-4-30 23:59:59")
+    name = random.choice(NAME_LIST)
+    drink = random.choice(DRINK_LIST)
+    price = PRICE_LIST[drink]
+
+    # ランダムなデータからInsert文を生成
+    sqlCommands += "INSERT INTO test " \
+    "(time, name, item, value) " \
+    "VALUES ('{}', '{}', '{}', '{}');\n"\
+    .format(date, name, drink, price)
+
 # 生成したSQLコマンドをファイルに書き出す
 f = open(OUTPUT_FILE, 'w')
 f.write(sqlCommands)
