@@ -52,7 +52,7 @@ router.get('/', function(req, res, next) {
       console.log("table SQL error!",err);
     }
     console.log(rowData);
-    res.render('hello', {
+    res.render('coffeeMarathon', {
       year: year,
       month: month,
       //dlLink: csvFileName,

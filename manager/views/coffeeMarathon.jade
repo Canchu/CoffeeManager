@@ -1,19 +1,18 @@
 dectype
   head
     title Nojima_Hirota Lab Coffee Manager
-    script(type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
-    script(type='text/javascript' src="jquery.tablesorter.min.js")
-    script(type='text/javascript' src="/javascripts/OnOff.js")
-    script(type='text/javascript' src="/javascripts/Chart.js")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
+    script(src="jquery.tablesorter.min.js")
+    script(src="/javascripts/coffeeMarathon.js")
+    script(src="/javascripts/Chart.js")
     link(rel="stylesheet" href="/stylesheets/style.css")
-    link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.min.css')
-    link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap-theme.min.css')
-    script(type='text/javascript', src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+    link(rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css")
+    link(rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap-theme.min.css")
+    script(type='text/javascript', src='/components/bootstrap/dist/js/bootstrap.min.js')
     
   body
     .container
         h1 Nojima_Hirota Lab Coffee Manager
-        p#price Hello
 
         text #{year}年
             select#month(name="month")
