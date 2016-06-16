@@ -79,13 +79,12 @@ $(function() {
     var priceByCoffee = [0,0,0,0];
     for(var i=0; i < tableData.item.length; i++){
         var itemName = tableData.item[i];
-        //console.log(itemName);
+
         if(itemName == "Dolce gusto") priceByCoffee[0] += 60;
         else if(itemName == "Barista") priceByCoffee[1] += 30;
         else if(itemName == "Dolce gusto with milk") priceByCoffee[2] += 120;
         else if(itemName == "Special T") priceByCoffee[3] += 60;
     }
-    //console.log(priceByCoffee);
 
      var user_RankData =  {
         labels: allUserName,
