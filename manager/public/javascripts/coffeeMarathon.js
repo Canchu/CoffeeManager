@@ -76,13 +76,16 @@ $(function() {
         }
     }
 
-    var priceByCoffee = [0,0,0];
+    var priceByCoffee = [0,0,0,0];
     for(var i=0; i < tableData.item.length; i++){
         var itemName = tableData.item[i];
-        if(itemName == "Dolce Gusto") priceByCoffee[0] += 60;
-        else if(itemName == "GoldBrend Barista") priceByCoffee[1] += 30;
-        else priceByCoffee[2] += 60;
+        //console.log(itemName);
+        if(itemName == "Dolce gusto") priceByCoffee[0] += 60;
+        else if(itemName == "Barista") priceByCoffee[1] += 30;
+        else if(itemName == "Dolce gusto with milk") priceByCoffee[2] += 120;
+        else if(itemName == "Special T") priceByCoffee[3] += 60;
     }
+    //console.log(priceByCoffee);
 
      var user_RankData =  {
         labels: allUserName,
@@ -98,7 +101,7 @@ $(function() {
     };
 
     var coffee_RankData =  {
-        labels: ["Dolce Gusto", "GoldBrend Barista", "Special.T"],
+        labels: ["Dolce Gusto", "GoldBrend Barista", "Dolce gusto w/ milk","Special.T"],
         datasets: [{
                 label: "CoffeeRank dataset price",
                 fillColor: "rgba(220,220,220,0.5)",
@@ -113,7 +116,7 @@ $(function() {
                 strokeColor: "rgba(151,187,205,0.8)",
                 highlightFill: "rgba(151,187,205,0.75)",
                 highlightStroke: "rgba(151,187,205,1)",
-                data: [priceByCoffee[0]/60, priceByCoffee[1]/30, priceByCoffee[2]/60]
+                data: [priceByCoffee[0]/60, priceByCoffee[1]/30, priceByCoffee[2]/120, priceByCoffee[3]/60]
             }
         ]
     };
