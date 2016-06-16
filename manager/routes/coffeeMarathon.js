@@ -30,27 +30,34 @@ var rowData;
 
 /* GET hello page. */
 router.get('/', function(req, res, next) {
+  var year = req.query.year;
   var month = req.query.month;
   var day = new Date();
+
+  if(year == undefined || month > 12 || month < 1){
+    year = day.getFullYear();
+  }
 
   if(month == undefined || month > 12 || month < 1){
     month = day.getMonth()+1;
   }
 
-  var startDate = '2015-' + month + '-01';
-  var endDate   = '2015-' + month + '-31';
+  var startDate = year + '-' + month + '-01';
+  var endDate   = year + '-' + month + '-31';
   var sql = "select * from test where time >= '" + startDate + "'and time <= '" + endDate + "'";
 
   connection.query(sql, function (err, rows) {
-      rowData = rows;
-      if(err){
-        console.log("table SQL error!",err);
-      }
-      res.render('hello', {
-          month: month,
-          //dlLink: csvFileName,
-          data: rows
-      });
+    rowData = rows;
+    if(err){
+      console.log("table SQL error!",err);
+    }
+    console.log(rowData);
+    res.render('coffeeMarathon', {
+      year: year,
+      month: month,
+      //dlLink: csvFileName,
+      data: rowData
+    });
   });
 });
 
