@@ -8,6 +8,10 @@ from datetime import datetime
 
 from pprint import pprint
 
+from get_credential import get_credentials
+from get_credential import createMessage
+from get_credential import sendMessage
+
 SQL_SECRET_FILE = 'sql_secret.json'
 TABLE_NAME = 'test'
 TABLE_NAME_ID = 'test_id'
@@ -23,6 +27,24 @@ connection = MySQLdb.connect(
 	passwd = sql_info['passwd'])
 cursor = connection.cursor()
 
+def getUsernames():
+	users = []
+	sql = 'select name from %s;' % TABLE_NAME_ID
+	cursor.execute(sql)
+	results = cursor.fetchall()
+	for row in results:
+		users.append(row[0])
+	return users
+
+def getDrinks():
+	drinks = []
+	cmd = "select name from %s;" % TABLE_NAME_DRINKS
+	cursor.execute(cmd)
+	result = cursor.fetchall()
+	for row in result:
+		drinks.append(row[0])
+	return drinks
+
 def createBill(username, year, month):
 	bill = {}
 	bill['name'] = username
@@ -30,26 +52,20 @@ def createBill(username, year, month):
 
 	sql_search_date = "time >= '%04d-%02d-01' and time <= '%04d-%02d-31'" % ( year, month, year, month )
 
-	# get drinks info
-	drinks = []
-	cmd = "select name from %s;" % TABLE_NAME_DRINKS
-	cursor.execute(cmd)
-	result = cursor.fetchall()
-	for row in result:
-		drinks.append(row[0])
+	drinks = getDrinks()
 
-	print drinks
-
+	bill['subtotal'] = []
 	for drink in drinks:
-		bill['subtotal'][drink] = [0, 0]
 		cmd = (
 			"select count(*), coalesce(sum(price), 0) from %s "
 			"where name = '%s' and item = '%s' and %s;"
 			% ( TABLE_NAME, username, drink, sql_search_date ))
 		cursor.execute(cmd)
 		result = cursor.fetchone()
-		bill['subtotal'][drink][0] = int(result[0])
-		bill['subtotal'][drink][1] = int(result[1])
+		if (int(result[0]) != 0):
+			qty = int(result[0])
+			price = int(result[1])
+			bill['subtotal'].append([drink, qty, price])
 
 	bill['total'] = [0, 0]
 	cmd = (
@@ -67,43 +83,24 @@ def main():
 	year = datetime.now().year
 	month = datetime.now().month - 1
 	sql_search_date = "time >= '%04d-%02d-01' and time <= '%04d-%02d-31'" % ( year, month, year, month )
-	output_filename = '%04d-%02d.csv' % ( year, month )
-	print '%d年%d月の明細' % ( year, month )
 
-	drinks = []
-	cmd = "select name from %s;" % TABLE_NAME_DRINKS
-	cursor.execute(cmd)
-	result = cursor.fetchall()
-	for row in result:
-		drinks.append(row[0])
+	users = getUsernames()
 
-	sql = (
-		"select count(*), coalesce(sum(price), 0) from %s "
-		"where %s;"
-		% ( TABLE_NAME, sql_search_date ))
-	cursor.execute(sql)
-	result = cursor.fetchone()
-	print "%d杯 %d円" % ( result[0], result[1] )
+	bills = []
+	for user in users:
+		bills.append(createBill(user, year, month))
 
-	# ユーザー一覧を取得
-	sql = 'select name from %s;' % TABLE_NAME_ID
-	cursor.execute(sql)
-	results = cursor.fetchall()
-	users = []
-	for row in results:
-		users.append(row[0])
+	pprint(bills)
 
-	bill = createBill('uhey', 2016, 5)
-	pprint(bill)
+	for bill in bills:
+		print "%s's bill" % bill['name']
+		for sub in bill['subtotal']:
+			print "%s: qty %d subtotal %d" % ( sub[0], sub[1], sub[2] )
+		print "total: qty %d, %d" % ( bill['total'][0], bill['total'][1] )
+		print ''
 
 	cursor.close()
 	connection.close()
-
-	# for user in users:
-	# 	print '%sさんのご利用明細' % user
-	# 	for drink in drinks:
-	# 		print '%s: %d杯 %d円' % ( drink, bills[user][drink][0], bills[user][drink][1] )
-	# 	print '合計: %d杯 %d円' % ( bills[user]['total'][0], bills[user]['total'][1] )
 
 if __name__ == '__main__':
 	main()
