@@ -8,6 +8,12 @@ from datetime import datetime
 
 from pprint import pprint
 
+import httplib2
+from apiclient import discovery
+import oauth2client
+from oauth2client import client
+from oauth2client import tools
+
 from get_credential import get_credentials
 from get_credential import createMessage
 from get_credential import sendMessage
@@ -48,11 +54,25 @@ def getDrinks():
 def createBill(username, year, month):
 	bill = {}
 	bill['name'] = username
-	bill['subtotal'] = {}
+
+	cmd = "select email from %s where name = '%s';" % ( TABLE_NAME_ID, username )
+	cursor.execute(cmd)
+	result = cursor.fetchone()
+	bill['email'] = result[0]
 
 	sql_search_date = "time >= '%04d-%02d-01' and time <= '%04d-%02d-31'" % ( year, month, year, month )
 
 	drinks = getDrinks()
+
+	bill['total'] = [0, 0]
+	cmd = (
+		"select count(*), coalesce(sum(price), 0) from %s "
+		"where name = '%s' and %s;"
+		% ( TABLE_NAME, username, sql_search_date ))
+	cursor.execute(cmd)
+	result = cursor.fetchone()
+	bill['total'][0] = int(result[0])
+	bill['total'][1] = int(result[1])
 
 	bill['subtotal'] = []
 	for drink in drinks:
@@ -66,16 +86,6 @@ def createBill(username, year, month):
 			qty = int(result[0])
 			price = int(result[1])
 			bill['subtotal'].append([drink, qty, price])
-
-	bill['total'] = [0, 0]
-	cmd = (
-		"select count(*), coalesce(sum(price), 0) from %s "
-		"where name = '%s' and %s;"
-		% ( TABLE_NAME, username, sql_search_date ))
-	cursor.execute(cmd)
-	result = cursor.fetchone()
-	bill['total'][0] = int(result[0])
-	bill['total'][1] = int(result[1])
 
 	return bill
 
@@ -91,6 +101,11 @@ def main():
 		bills.append(createBill(user, year, month))
 
 	pprint(bills)
+
+
+	credentials = get_credentials()
+	http = credentials.authorize(httplib2.Http())
+	service = discovery.build('gmail', 'v1', http=http)
 
 	for bill in bills:
 		print "%s's bill" % bill['name']
