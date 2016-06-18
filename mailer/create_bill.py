@@ -71,8 +71,11 @@ def createBill(username, year, month):
 		% ( TABLE_NAME, username, sql_search_date ))
 	cursor.execute(cmd)
 	result = cursor.fetchone()
-	bill['total'][0] = int(result[0])
-	bill['total'][1] = int(result[1])
+	if (int(result[0]) != 0):
+		bill['total'][0] = int(result[0])
+		bill['total'][1] = int(result[1])
+	else:
+		return False
 
 	bill['subtotal'] = []
 	for drink in drinks:
@@ -98,10 +101,13 @@ def main():
 
 	bills = []
 	for user in users:
-		bills.append(createBill(user, year, month))
+		bill = createBill(user, year, month)
+		if bill:
+			bills.append(createBill(user, year, month))
+		else:
+			continue
 
 	pprint(bills)
-
 
 	credentials = get_credentials()
 	http = credentials.authorize(httplib2.Http())
