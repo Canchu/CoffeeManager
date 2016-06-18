@@ -7,7 +7,8 @@ import MySQLdb
 from datetime import datetime
 
 SQL_SECRET_FILE = 'sql_secret.json'
-TABLE_NAME = 'test_id'
+TABLE_NAME = 'test'
+TABLE_NAME_ID = 'test_id'
 
 def main():
 	year = datetime.now().year
@@ -27,15 +28,15 @@ def main():
 	cursor = connection.cursor()
 
 	sql = (
-		"select count(*), coalesce(sum(value), 0) from test "
+		"select count(*), coalesce(sum(value), 0) from %s "
 		"where %s;"
-		% ( sql_search_date ))
+		% ( TABLE_NAME, sql_search_date ))
 	cursor.execute(sql)
 	result = cursor.fetchone()
 	print "%d杯 %d円" % ( result[0], result[1] )
 
 	# ユーザー一覧を取得
-	sql = 'select name from %s;' % TABLE_NAME
+	sql = 'select name from %s;' % TABLE_NAME_ID
 	cursor.execute(sql)
 	results = cursor.fetchall()
 	users = []
@@ -51,17 +52,17 @@ def main():
 		for drink in drinks:
 			bills[user][drink] = []
 			sql = (
-				"select count(*), coalesce(sum(value), 0) from test "
+				"select count(*), coalesce(sum(value), 0) from %s "
 				"where name = '%s' and item = '%s' and %s;"
-				% ( user, drink, sql_search_date ))
+				% ( TABLE_NAME, user, drink, sql_search_date ))
 			cursor.execute(sql)
 			result = cursor.fetchone()
 			bills[user][drink].append(int(result[0]))
 			bills[user][drink].append(int(result[1]))
 		sql = (
-			"select count(*), coalesce(sum(value), 0) from test "
+			"select count(*), coalesce(sum(value), 0) from %s "
 			"where name = '%s' and %s;"
-			% ( user, sql_search_date ))
+			% ( TABLE_NAME, user, sql_search_date ))
 		cursor.execute(sql)
 		result = cursor.fetchone()
 		bills[user]['total'] = [int(result[0]), int(result[1])]
