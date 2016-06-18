@@ -93,7 +93,7 @@ def main():
 	http = credentials.authorize(httplib2.Http())
 	service = discovery.build('gmail', 'v1', http=http)
 
-	to = 'cafe@vogue.is.uec.ac.jp'
+	to = 'konbu.su@gmail.com'
 	subject = u'ご利用料金のお知らせ'
 
 	mail_first = (
