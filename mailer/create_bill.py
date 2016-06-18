@@ -114,7 +114,6 @@ def main():
 	service = discovery.build('gmail', 'v1', http=http)
 
 	for bill in bills:
-		month = 4
 		sbj = "[VogueCafe] %d月度利用料金のお知らせ" % month
 
 		msg = (
