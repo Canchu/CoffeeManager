@@ -77,7 +77,7 @@ def createBill(username, year, month):
 	else:
 		return False
 
-	bill['subtotal'] = []
+	bill['subtotals'] = []
 	for drink in drinks:
 		cmd = (
 			"select count(*), coalesce(sum(price), 0) from %s "
@@ -88,7 +88,7 @@ def createBill(username, year, month):
 		if (int(result[0]) != 0):
 			qty = int(result[0])
 			price = int(result[1])
-			bill['subtotal'].append([drink, qty, price])
+			bill['subtotals'].append([drink, qty, price])
 
 	return bill
 
@@ -114,11 +114,29 @@ def main():
 	service = discovery.build('gmail', 'v1', http=http)
 
 	for bill in bills:
-		print "%s's bill" % bill['name']
-		for sub in bill['subtotal']:
-			print "%s: qty %d subtotal %d" % ( sub[0], sub[1], sub[2] )
-		print "total: qty %d, %d" % ( bill['total'][0], bill['total'][1] )
-		print ''
+		month = 4
+		sbj = "[VogueCafe] %d月度利用料金のお知らせ" % month
+
+		msg = (
+			"いつもVogueCafeをご利用頂きありがとうございます。\n"
+			"%d年%d月分の料金のお知らせです。\n\n" % ( year, month ))
+
+		msg += "%sさんのご利用明細は以下の通りです。\n\n" % bill['name']
+		msg += "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n"
+
+		for sub in bill['subtotals']:
+			msg += "%s: %d杯 %d円\n" % ( sub[0], sub[1], sub[2] )
+		msg += "\n合計: %d杯 %d円\n" % ( bill['total'][0], bill['total'][1] )
+		msg += "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n"
+
+		msg += "今後ともVogueCafeをよろしくお願い致します。\n"
+
+		mail = createMessage(
+			to = bill['email'],
+			subject = unicode(sbj, 'utf-8'),
+			message_text = unicode(msg, 'utf-8'))
+		sendMessage(service, 'me', mail)
+		print msg
 
 	cursor.close()
 	connection.close()

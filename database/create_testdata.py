@@ -10,13 +10,14 @@ def randomDate(start, end):
     ptime = stime + random.random() * (etime - stime)
     return time.strftime(format, time.localtime(ptime))
 
-DRINK_LIST = [ 'Barista', 'Dolce gusto', 'Dolce gusto with milk', 'Special T' ]
+DRINK_LIST = [ 'Barista', 'Dolce Gusto', 'Dolce Gusto with Milk', 'Special T', 'Iced Coffee' ]
 
 PRICE_LIST = {
     'Barista': 30,
-    'Dolce gusto': 60,
-    'Dolce gusto with milk': 120,
-    'Special T': 60
+    'Dolce Gusto': 60,
+    'Dolce Gusto with Milk': 120,
+    'Special T': 60,
+    'Iced Coffee': 50
 }
 
 NAME_LIST = [ 'uhey', 'yoshida', 'okano', 'minagawa', 'umesh' ]
@@ -65,7 +66,7 @@ for _ in range(RECORD_COUNT):
 
     # ランダムなデータからInsert文を生成
     sqlCommands += "INSERT INTO test " \
-    "(time, name, item, value) " \
+    "(time, name, item, price) " \
     "VALUES ('{}', '{}', '{}', '{}');\n"\
     .format(date, name, drink, price)
 
@@ -79,7 +80,7 @@ for _ in range(RECORD_COUNT):
 
     # ランダムなデータからInsert文を生成
     sqlCommands += "INSERT INTO test " \
-    "(time, name, item, value) " \
+    "(time, name, item, price) " \
     "VALUES ('{}', '{}', '{}', '{}');\n"\
     .format(date, name, drink, price)
 
