@@ -7,3 +7,7 @@ node_modules
 *.pyc
 
 *.swp
+
+# Google API
+client_secret.json
+sql_secret.json
