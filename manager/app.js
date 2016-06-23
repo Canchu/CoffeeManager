@@ -16,6 +16,12 @@ var app = express();
 
 var jsonParser = bodyParser.json();
 
+var SQL_SECRET_FILE = 'sql_secret.json'
+var TABLE_NAME = 'test'
+var TABLE_NAME_ID = 'test_id'
+var TABLE_NAME_DRINKS = 'test_drinks'
+var sql_info = JSON.parse(fs.readFileSync(SQL_SECRET_FILE, 'utf8'));
+
 app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -144,10 +150,10 @@ app.use(function(err, req, res, next) {
 
 //DB settings
 var connection = mysql.createConnection({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'user',
-  password: process.env.DB_PASS || 'NojiNoji',
-  database: process.env.DB_NAME || 'CoffeeManager_db'
+  host: process.env.DB_HOST || sql_info.host,
+  user: process.env.DB_USER || sql_info.user,
+  password: process.env.DB_PASS || sql_info.passwd,
+  database: process.env.DB_NAME || sql_info.dbname
 });
 
 //connect with DB
