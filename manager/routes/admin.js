@@ -11,6 +11,7 @@ var connection = mysql.createConnection({
 });
 
 var table_id = "test_id";
+var table_drinks = "test_drinks";
 
 connection.connect(function(err) {
 	if (err) {
@@ -21,14 +22,28 @@ connection.connect(function(err) {
 });
 
 router.get('/', function(req, res, next) {
-	var params = {};
-	var users = [];
+	res.render('admin', {});
+});
+
+router.get('/users', function(req, res, next) {
+	var data = {};
+	data.title = 'ユーザ情報'
 	var sql = "SELECT * FROM " + table_id + ";";
 	connection.query(sql, function(err, rows) {
 		if (err) throw err;
-		params.users = rows;
-		console.log(params);
-		res.render('admin', params);
+		data.users = rows;
+		res.render('admin_users', data);
+	});
+});
+
+router.get('/drinks', function(req, res, next) {
+	var data = {};
+	data.title = '商品情報'
+	var sql = "SELECT * FROM " + table_drinks + ";";
+	connection.query(sql, function(err, rows) {
+		if (err) throw err;
+		data.drinks = rows;
+		res.render('admin_drinks', data);
 	});
 });
 

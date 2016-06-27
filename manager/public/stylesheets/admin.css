@@ -1,0 +1,15 @@
+.container {
+	margin-top: 30px;
+}
+
+.sidebar {
+}
+
+.btn {
+	width: 100%;
+}
+
+input.number {
+	text-align: right;
+	width: 100px;
+}
