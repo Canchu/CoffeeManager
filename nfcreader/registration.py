@@ -10,8 +10,10 @@ import RPi.GPIO as GPIO
 from so1602a import SO1602A
 from nfcreader import nfcReader
 
+APP_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+
 TABLE_NAME = 'test_id';
-SQL_SECRET_FILE = '../secrets/sql_secret.json'
+SQL_SECRET_FILE = APP_ROOT + '/secrets/sql_secret.json'
 
 def getUsername(nfc_id):
 	uri = 'http://127.0.0.1:3000/api/get/username'

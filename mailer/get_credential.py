@@ -22,10 +22,12 @@ except ImportError:
 
 charset = 'utf-8'
 
+APP_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/gmail-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/gmail.send'
-CLIENT_SECRET_FILE = '../secrets/client_secret.json'
+CLIENT_SECRET_FILE = APP_ROOT + '/secrets/client_secret.json'
 APPLICATION_NAME = 'Gmail API Python Quickstart'
 
 def get_credentials():
