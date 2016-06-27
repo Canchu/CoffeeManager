@@ -2,11 +2,25 @@ doctype html
 html(lang=ja)
 	head
 		title Admin Page
-		link(rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css")
-		script(rel="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
-		script(type="text/javascript", src="/components/bootstrap/dist/js/bootstrap.min.js")
+		link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css")
+		script(rel="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
+		script(type="text/javascript", src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
 
 	body
 		.container
-			h1 Hello Admin
-			p hello
+			h2 ユーザー一覧
+
+			table.table.table-striped
+				thead
+					tr
+						th #
+						th Name
+						th ID
+						th E-Mail
+				tbody
+					each key, index in users
+						tr
+							td #{index}
+							td #{key.name}
+							td #{key.id}
+							td #{key.email}
