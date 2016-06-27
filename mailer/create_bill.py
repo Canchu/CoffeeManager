@@ -18,7 +18,9 @@ from get_credential import get_credentials
 from get_credential import createMessage
 from get_credential import sendMessage
 
-SQL_SECRET_FILE = '../secrets/sql_secret.json'
+APP_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+
+SQL_SECRET_FILE = APP_ROOT + "/secrets/sql_secret.json"
 TABLE_NAME = 'test'
 TABLE_NAME_ID = 'test_id'
 TABLE_NAME_DRINKS = 'test_drinks'
