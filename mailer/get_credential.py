@@ -25,7 +25,7 @@ charset = 'utf-8'
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/gmail-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/gmail.send'
-CLIENT_SECRET_FILE = 'client_secret.json'
+CLIENT_SECRET_FILE = '../secrets/client_secret.json'
 APPLICATION_NAME = 'Gmail API Python Quickstart'
 
 def get_credentials():

@@ -10,6 +10,9 @@ import RPi.GPIO as GPIO
 from so1602a import SO1602A
 from nfcreader import nfcReader
 
+TABLE_NAME = 'test_id';
+SQL_SECRET_FILE = '../secrets/sql_secret.json'
+
 def getUsername(nfc_id):
 	uri = 'http://127.0.0.1:3000/api/get/username'
 	params = {'id': nfc_id}
@@ -35,6 +38,8 @@ def beep(pin, num = 2, err = False):
 
 def main():
 	bell = 27
+
+	GPIO.cleanup()
 	
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(bell, GPIO.OUT)
@@ -61,13 +66,17 @@ def main():
 		print 'please input your email'
 		email = raw_input()
 
+		f = open(SQL_SECRET_FILE, 'r')
+		sql_info = json.load(f)
+
 		connection = MySQLdb.connect(
-			db = 'CoffeeManager_db',
-			user = 'user',
-			passwd='NojiNoji')
+			host = sql_info['host'],
+			db = sql_info['dbname'],
+			user = sql_info['user'],
+			passwd = sql_info['passwd'])
 		cursor = connection.cursor()
 
-		sql = "INSERT INTO test_id (id, name, email) VALUES ('%s', '%s', '%s')" % (reader.id, username, email)
+		sql = "INSERT INTO %s (id, name, email) VALUES ('%s', '%s', '%s')" % (TABLE_NAME, reader.id, username, email)
 		print(cursor.execute(sql))
 		connection.commit()
 
