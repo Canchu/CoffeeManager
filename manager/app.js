@@ -11,14 +11,25 @@ var fs = require('fs');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var coffeeMarathon = require('./routes/coffeeMarathon');
+var admin = require('./routes/admin');
+var basicAuth = require('basic-auth-connect');
 
 var app = express();
 
 var jsonParser = bodyParser.json();
 
+var admin_secret = JSON.parse(fs.readFileSync('./admin_secret.json', 'utf8'));
+var admin_usr = admin_secret.username;
+var admin_pass = admin_secret.password;
+
 app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// BASIC Authentification
+app.all('/admin*', basicAuth(function(user, password) {
+  return user === admin_usr && password === admin_pass;
+}));
 
 app.get('/api/get/username',function(req, res){
   var id = "";
@@ -127,6 +138,7 @@ app.set('view engine', 'jade');
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/admin', admin)
 app.use('/coffeeMarathon', coffeeMarathon);
 
 

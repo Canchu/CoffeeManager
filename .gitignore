@@ -11,3 +11,4 @@ node_modules
 # Google API
 client_secret.json
 sql_secret.json
+admin_secret.json

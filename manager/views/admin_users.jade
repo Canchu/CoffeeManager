@@ -1,0 +1,22 @@
+extends layout
+
+block title
+	title #{title}
+
+block body
+	h2.text-center #{title}
+
+	table.table.table-striped
+		thead
+			tr
+				th #
+				th Name
+				th ID
+				th E-Mail
+		tbody
+			each key, index in users
+				tr
+					td #{index}
+					td #{key.name}
+					td #{key.id}
+					td #{key.email}

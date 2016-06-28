@@ -1,7 +1,17 @@
 doctype html
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+html(lang=ja)
+	head
+		block title
+			title Default Title
+		link(rel="stylesheet" href="/stylesheets/admin.css")
+		link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css")
+		script(rel="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
+		script(rel="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
+		script(rel="text/javascript" src="https://use.fontawesome.com/64b1a5f14f.js")
+	body
+		.container
+			.row
+				.col-md-2.sidebar
+					include admin_sidenav
+				.col-md-10
+					block body
