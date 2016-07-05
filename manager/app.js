@@ -54,9 +54,9 @@ app.get('/api/get/username',function(req, res){
         name = rows[0].name;
       }
       //res.render(name);
-      res.json({'name': name}); 
     });
   }
+  res.json({'name': name}); 
 });
 
 //postでjsonという名前のパラメータで渡されてくるJSONを読み込む
