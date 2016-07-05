@@ -1,10 +1,13 @@
+var fs = require('fs');
 var mysql = require('mysql');
 
+var sql_secret = JSON.parse(fs.readFileSync('./../secrets/sql_secret.json', 'utf8'));
+
 var db_config = {
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'user',
-    password: process.env.DB_PASS || 'NojiNoji',
-    database: process.env.DB_NAME || 'CoffeeManager_db'
+    host: sql_secret.host,
+    database: sql_secret.db,
+    user: sql_secret.user,
+    password: sql_secret.passwd,
 };
 
 var connection = mysql.createConnection(db_config);
@@ -18,6 +21,7 @@ function handleDisconnect() {
         console.log('DB connected ID: ', connection.threadId);
     });
 
+    // catch disconnection
     connection.on('error', function(err) {
         console.log('db error', err);
         if(err.code === 'PROTOCOL_CONNECTION_LOST') {
