@@ -43,6 +43,31 @@ router.get('/user', function(req, res, next) {
 	}
 });
 
+router.post('/user', jsonParser, function(req, res, next) {
+	var id = req.body.id;
+	var username = req.body.name;
+	var email = req.body.email;
+
+	// validation
+	if (id == null || username == null || email == null) {
+		res.status(400);
+		res.send();
+		return;
+	}
+
+	var sql_insert = "INSERT INTO "
+		+ table_id
+		+ " (id, name, email) VALUES ("
+		+ "'" + id + "', "
+		+ "'" + username + "', "
+		+ "'" + email + "');"
+	connection.query(sql_insert, function(err) {
+		if (err) throw err;
+	});
+
+	res.send("success");
+});
+
 router.post('/payment', jsonParser, function(req, res, next) {
 	if (!req.body) {
 		return res.sendStatus(400);
