@@ -1,27 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
-var async = require('async');
 var dateFormat = require('dateformat');
 
-var connection = mysql.createConnection({
-	host: 'localhost',
-	user: 'user',
-	password: 'NojiNoji',
-	database: 'CoffeeManager_db'
-});
-
 const table_journal = "test";
-var table_id = "test_id";
-var table_drinks = "test_drinks";
-
-connection.connect(function(err) {
-	if (err) {
-		console.error('error connecting: ' + err.stack);
-		return;
-	}
-	console.log('DBconnected as id ' + connection.threadId);
-});
+const table_id = "test_id";
+const table_drinks = "test_drinks";
 
 router.get('/', function(req, res, next) {
 	data = {};

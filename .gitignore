@@ -12,3 +12,7 @@ node_modules
 client_secret.json
 sql_secret.json
 admin_secret.json
+
+# vim
+*~
+*.swp

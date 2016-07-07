@@ -12,6 +12,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var coffeeMarathon = require('./routes/coffeeMarathon');
 var admin = require('./routes/admin');
+var api = require('./routes/api');
 var basicAuth = require('basic-auth-connect');
 
 var app = express();
@@ -140,6 +141,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/admin', admin)
 app.use('/coffeeMarathon', coffeeMarathon);
+app.use('/api', api);
 
 
 
