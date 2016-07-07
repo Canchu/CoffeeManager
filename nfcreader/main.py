@@ -11,7 +11,7 @@ from so1602a import SO1602A
 from nfcreader import nfcReader
 
 def getUsername(nfc_id):
-	uri = 'http://127.0.0.1:3000/api/get/username'
+	uri = 'http://localhost:3000/api/user'
 	params = {'id': nfc_id}
 	response = requests.get(uri, params = params)
 
@@ -19,7 +19,7 @@ def getUsername(nfc_id):
 
 
 def postPayment(nfc_id, drink):
-	uri = 'http://127.0.0.1:3000/api/post/payment'
+	uri = 'http://localhost:3000/api/payment'
 	datetime_jst = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 	header = {'Content-Type': 'application/json; charset=utf-8'}
 	payload = {
