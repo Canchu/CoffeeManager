@@ -1,30 +1,7 @@
 var express = require('express');
-var mysql = require('mysql');
-
 var router = express.Router();
- 
 
-//connect DB
-var connection = mysql.createConnection({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'user',
-  password: process.env.DB_PASS || 'NojiNoji',
-  database: process.env.DB_NAME || 'CoffeeManager_db'
-});
-
-
-connection.connect(function(err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }
-  console.log('DBconnected as id ' + connection.threadId);
-
-  connection.query('select * from test', function (err, rows) {
-        //console.log(rows);
-    });
-});
-
+var connection = require('../mysql_connect.js');
 
 var rowData;
 
