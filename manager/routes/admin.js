@@ -1,10 +1,13 @@
 var express = require('express');
 var router = express.Router();
+var async = require('async');
 var dateFormat = require('dateformat');
 
+var connection = require('../mysql_connect');
+
 const table_journal = "test";
-const table_id = "test_id";
-const table_drinks = "test_drinks";
+var table_id = "test_id";
+var table_drinks = "test_drinks";
 
 router.get('/', function(req, res, next) {
 	data = {};

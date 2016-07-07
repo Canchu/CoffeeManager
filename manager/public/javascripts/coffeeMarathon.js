@@ -168,7 +168,7 @@ $(function() {
 function changePageByMonth(paramValue){
     var nowMonth = document.getElementById('month').value;
     if(nowMonth - paramValue != 0){
-        window.location.href = "http://localhost:3000/coffeeMarathon?month=" + nowMonth;
+        window.location.href = "/coffeeMarathon?month=" + nowMonth;
         return;
     }
     else if(paramValue == undefined){
