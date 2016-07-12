@@ -71,7 +71,7 @@ def main():
 
 			reader.waitContact()
 
-			name = str(getUsername(reader.id).json()['name'])
+			name = getUsername(reader.id)
 
 			if (name == 'unregistered'):
 				oled.clearDisplay()
