@@ -16,6 +16,7 @@ router.get('/', function(req, res, next) {
 	res.send('Hello world!');
 })
 
+// get username by nfcid
 router.get('/user', function(req, res, next) {
 	var id = "";
 	var name = "unregistered";
@@ -43,6 +44,7 @@ router.get('/user', function(req, res, next) {
 	}
 });
 
+// create a new user
 router.post('/user', jsonParser, function(req, res, next) {
 	var id = req.body.id;
 	var username = req.body.name;
@@ -68,6 +70,7 @@ router.post('/user', jsonParser, function(req, res, next) {
 	res.send("success");
 });
 
+// post payment information
 router.post('/payment', jsonParser, function(req, res, next) {
 	if (!req.body) {
 		return res.sendStatus(400);
@@ -157,6 +160,21 @@ router.post('/payment', jsonParser, function(req, res, next) {
 		});
 	});
 });
+
+router.get('/drink', function(req, res, next) {
+	var data = { drinks: [] };
+
+	var sql_drink = "SELECT * FROM " + table_drinks + ";";
+	connection.query(sql_drink, function(err, rows) {
+		if (err) {
+			throw err;
+			res.status(400);
+		}
+		data.drinks = rows;
+		console.log(data);
+		res.json(JSON.stringify(data));
+	});
+})
 
 module.exports = router;
 
