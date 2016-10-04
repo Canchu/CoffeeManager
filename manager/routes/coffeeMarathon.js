@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var async = require('async');
 
 var connection = require('../mysql_connect.js');
 
@@ -23,19 +24,51 @@ router.get('/', function(req, res, next) {
   var endDate   = year + '-' + month + '-31';
   var sql = "select * from test where time >= '" + startDate + "'and time <= '" + endDate + "'";
 
-  connection.query(sql, function (err, rows) {
-    rowData = rows;
-    if(err){
-      console.log("table SQL error!",err);
+  // ユーザごとの利用料金算出
+  // ランキング
+  // 商品ごとの売上算出
+
+  async.waterfall([
+    (callback) => {
+      // ユーザ一覧取得
+      const sql = "select name from test_id";
+      connection.query(sql, (err, rows) => {
+        if (err) throw err;
+        const userNames = rows.map((data) => {
+          return data.name;
+        });
+        callback(null, userNames);
+      })
+    },
+    (userNames, callback) => {
+      // ユーザごとの利用料金算出
+      var record = {};
+      async.map(userNames, (name, callback) => {
+        const sql = `select count(*) from test where name = '${name}';`;
+        console.log(sql);
+        connection.query(sql, (err, rows) => {
+          if (err) throw err;
+          callback(null, { name, qty: rows[0]['count(*)'] });
+        });
+      }, (err, results) => {
+        if (err) throw err;
+        results.sort((a, b) => {
+          if (a.qty > b.qty) return -1;
+          return 1;
+        });
+        callback(null, results);
+      });
+    },
+    (results, callback) => {
+      console.log(results);
+      res.render('coffeeMarathon', {
+        year,
+        month,
+        results,
+      });
     }
-    console.log(rowData);
-    res.render('coffeeMarathon', {
-      year: year,
-      month: month,
-      //dlLink: csvFileName,
-      data: rowData
-    });
-  });
+  ]);
+
 });
 
 /* POST hello page. */

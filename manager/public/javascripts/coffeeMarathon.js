@@ -1,30 +1,11 @@
 $(function() {
 
-/*****　webSocket ******
-    socket = io.connect('http://localhost:3000');
+    /* nodeからデータをもらってくる */
+    var $main = $("#graph");
+    var dataNum = $main.data("num");
+    var dataJson = $main.data("json");
 
-    // WebSocketでの接続
-    socket.on('connect', function(msg) {
-        console.log("connect");
-    });
-
-    // メッセージを受けたとき
-    socket.on('message', function(msg) {
-        if (typeof msg.value != undefined) {
-            console.log(msg.value);
-            // LEDの状態を反映
-            if ( msg.value === 1) {
-                $('#switch').attr('checked', 'checked');
-            } else {
-                $('#switch').removeAttr('checked');
-            }
-        }
-    });
-
-    socket.on('DBmessage', function(msg) {
-        console.log(msg.value);
-    });
-********************************/
+    console.log(dataJson);
 
 /*****　詳細データテーブルの日付表示 ******/
     var dateList = document.getElementsByName('date');  
@@ -33,6 +14,7 @@ $(function() {
         document.getElementsByName('date')[i].innerHTML = str;
     }
 /********************************/
+
 
 /*****　テーブルにソート機能をつける ******/
     $('#all_data_table').tablesorter({

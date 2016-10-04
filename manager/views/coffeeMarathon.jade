@@ -3,7 +3,7 @@ dectype
     title Nojima_Hirota Lab Coffee Manager
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
     script(src="jquery.tablesorter.min.js")
-    script(src="/javascripts/coffeeMarathon.js")
+    script(src="/javascripts/coffeeMarathon.js", id="graph", data-json=JSON.stringify(results))
     script(src="/javascripts/Chart.js")
     link(rel="stylesheet" href="/stylesheets/style.css")
     link(rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css")
@@ -13,6 +13,9 @@ dectype
   body
     .container
         h1 Nojima_Hirota Lab Coffee Manager
+
+        p=year
+        p=month
 
         text #{year}年
             select#month(name="month")
@@ -44,21 +47,3 @@ dectype
             input#DL_csv(value="csvをDL" type="submit")
         
         text#csvName(hidden) #{csvFileName}
-
-        p 各項目をクリックするとソートします
-        table#all_data_table.all_data_table
-            thead
-                tr   
-                    th 購入時刻
-                    th 購入者  
-                    th 購入品
-                    th 値段
-
-            tbody#user_data
-                each key in data
-                    tr
-                        td(name="date") #{key.time} 
-                        td #{key.name}
-                        td #{key.item}
-                        td #{key.value}
-           
