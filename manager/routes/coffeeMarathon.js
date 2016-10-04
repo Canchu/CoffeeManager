@@ -17,16 +17,11 @@ router.get('/', function(req, res, next) {
   }
 
   if(month == undefined || month > 12 || month < 1){
-    month = day.getMonth()+1;
+    month = day.getMonth() + 1;
   }
 
-  var startDate = year + '-' + month + '-01';
-  var endDate   = year + '-' + month + '-31';
-  var sql = "select * from test where time >= '" + startDate + "'and time <= '" + endDate + "'";
-
-  // ユーザごとの利用料金算出
-  // ランキング
-  // 商品ごとの売上算出
+  const startDate = `${year}-${month}-01`;
+  const endDate = `${year}-${month}-31`;
 
   async.waterfall([
     (callback) => {
@@ -42,9 +37,8 @@ router.get('/', function(req, res, next) {
     },
     (userNames, callback) => {
       // ユーザごとの利用料金算出
-      var record = {};
       async.map(userNames, (name, callback) => {
-        const sql = `select count(*) from test where name = '${name}';`;
+        const sql = `select count(*) from test where name = '${name}' and time >= '${startDate}' and time <= '${endDate}';`;
         console.log(sql);
         connection.query(sql, (err, rows) => {
           if (err) throw err;
