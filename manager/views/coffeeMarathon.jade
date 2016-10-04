@@ -3,7 +3,7 @@ dectype
     title Nojima_Hirota Lab Coffee Manager
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
     script(src="jquery.tablesorter.min.js")
-    script(src="/javascripts/coffeeMarathon.js", id="graph", data-json=JSON.stringify(results))
+    script(src="/javascripts/coffeeMarathon.js", id="graph", data-user-ranks=JSON.stringify(userRanks), data-drink-ranks=JSON.stringify(drinkRanks))
     script(src="/javascripts/Chart.js")
     link(rel="stylesheet" href="/stylesheets/style.css")
     link(rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css")
@@ -13,9 +13,6 @@ dectype
   body
     .container
         h1 Nojima_Hirota Lab Coffee Manager
-
-        p=year
-        p=month
 
         text #{year}年
             select#month(name="month")
@@ -33,12 +30,12 @@ dectype
                 option#Dec(value="12") 12
             text 月の売り上げ状況
           
-        h1 コーヒーマラソン
+        h2 コーヒーマラソン
         canvas#user_rank(height="300" width="600")
 
-        h1 コーヒーの種類別売り上げ
+        h2 コーヒーの種類別売り上げ
         p 左：総売上金額 右：売り上げ個数
-        canvas#coffee_rank(height="300" width="500")
+        canvas#coffee_rank(height="300" width="600")
 
 
         h2 #{year}年 #{month} 月の詳細データ

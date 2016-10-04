@@ -1,29 +1,9 @@
 $(function() {
 
   /* サーバからデータの受け渡し */
-  var $main = $("#graph");
-  var dataNum = $main.data("num");
-  var userRanks = $main.data("json");
-
-  console.log(userRanks);
-
-  /*****　詳細データテーブルの日付表示 ******/
-  var dateList = document.getElementsByName('date');  
-  for(var i =0; i < dateList.length; i++){
-    var str = comDateFormat(dateList[i].innerHTML);
-    document.getElementsByName('date')[i].innerHTML = str;
-  }
-  /********************************/
-
-
-  /*****　テーブルにソート機能をつける ******/
-  $('#all_data_table').tablesorter({
-    headers:{
-      3:{sorter:false} //値段にはソートつけない
-    }
-  });
-  /********************************/
-
+  var $main = $('#graph');
+  var userRanks = $main.data('user-ranks');
+  var drinkRanks = $main.data('drink-ranks');
 
   /*****　コーヒーレースと品物別売り上げのグラフ作成 ******/ 
 
@@ -36,35 +16,25 @@ $(function() {
       strokeColor: "rgba(52,152,219,0.8)",
       highlightFill: "rgba(52,152,219,0.75)",
       highlightStroke: "rgba(52,152,219,1)",
-      data: userRanks.map(function(data) { return data.qty }),
-    }]
+      data: userRanks.map(function(data) { return data.qty; }),
+    }],
   };
 
   var userRankGraph = new Chart(document.getElementById("user_rank").getContext("2d")).Bar(userRankGraphData);
 
-  var coffee_RankData =  {
-    labels: ["Dolce Gusto", "GoldBrend Barista", "Dolce gusto w/ milk","Special.T"],
+  var drinkRankGraphData = {
+    labels: drinkRanks.map(function(data) { return data.name; }),
     datasets: [{
       label: "CoffeeRank dataset price",
       fillColor: "rgba(220,220,220,0.5)",
       strokeColor: "rgba(220,220,220,0.8)",
       highlightFill: "rgba(220,220,220,0.75)",
       highlightStroke: "rgba(220,220,220,1)",
-      data: priceByCoffee
-    },
-    {
-      label: "CoffeeRank dataset times",
-      fillColor: "rgba(151,187,205,0.5)",
-      strokeColor: "rgba(151,187,205,0.8)",
-      highlightFill: "rgba(151,187,205,0.75)",
-      highlightStroke: "rgba(151,187,205,1)",
-      data: [priceByCoffee[0]/60, priceByCoffee[1]/30, priceByCoffee[2]/120, priceByCoffee[3]/60]
-    }
-    ]
+      data: drinkRanks.map(function(data) { return data.qty; }),
+    }],
   };
 
-
-  var coffeeRankBar = new Chart(document.getElementById("coffee_rank").getContext("2d")).Bar(coffee_RankData); 
+  var drinkRankGraph = new Chart(document.getElementById("coffee_rank").getContext("2d")).Bar(drinkRankGraphData); 
   /********************************/
 
 
