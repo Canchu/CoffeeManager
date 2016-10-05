@@ -1,6 +1,9 @@
-extends layout
+doctype html
 
-block content
+head(lang=ja)
+  title error
+
+body
   h1= message
   h2= error.status
   pre #{error.stack}

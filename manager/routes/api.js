@@ -161,6 +161,7 @@ router.post('/payment', jsonParser, function(req, res, next) {
 	});
 });
 
+// 商品情報の取得
 router.get('/drink', function(req, res, next) {
 	var data = { drinks: [] };
 
@@ -174,7 +175,27 @@ router.get('/drink', function(req, res, next) {
 		console.log(data);
 		res.json(JSON.stringify(data));
 	});
-})
+});
+
+// 商品価格の更新
+router.put('/drink', jsonParser, (req, res, next) => {
+  if (!req.body.prices) {
+    return res.sendStatus(400);
+  }
+  async.each(req.body.prices, (data, callback) => {
+    const sql = `UPDATE test_drinks SET price = ${data.price} where id = ${data.id};`;
+    connection.query(sql, (err, rows) => {
+      if (err) throw err;
+      callback();
+    });
+  }, (err) => {
+    if (err) {
+      throw err;
+      res.sendStatus(400);
+    }
+    res.sendStatus(200);
+  });
+});
 
 module.exports = router;
 
