@@ -1,31 +1,34 @@
 extends admin_layout
 
+block scripts
+  script(rel="text/javascript" src="/javascripts/admin_drinks.js" id="main" data-drinks=JSON.stringify(drinks))
+
 block title
-	title #{title}
+  title #{title}
 
 block body
-	h2.text-center #{title}
+  h2.text-center #{title}
 
-	table.table.table-striped
-		thead
-			tr
-				th ID
-				th Drink Name
-				th Price
-		tbody
-			each key in drinks
-				tr
-					td #{key.id}
-					td #{key.name}
-					td
-						input.number(type="text" value="#{key.price}")
+  table.table.table-striped
+    thead
+      tr
+        th ID
+        th Drink Name
+        th Price
+    tbody
+      each key in drinks
+        tr
+          td #{key.id}
+          td #{key.name}
+          td
+            input.number(type="text" value="#{key.price}" id="#{key.id}")
 
-	.row
-		.col-md-3.col-md-offset-2
-			button.btn.btn-primary.center-block
-				span.glyphicon.glyphicon-floppy-saved
-				&nbsp;保存
-		.col-md-3.col-md-offset-2
-			button.btn.btn-warning.btn.center-block
-				span.glyphicon.glyphicon-floppy-remove
-				&nbsp;破棄
+  .row
+    .col-md-3.col-md-offset-2
+      button#saveChanges.btn.btn-primary.center-block
+        span.glyphicon.glyphicon-floppy-saved
+        &nbsp;保存
+    .col-md-3.col-md-offset-2
+      button#discardChanges.btn.btn-warning.btn.center-block
+        span.glyphicon.glyphicon-floppy-remove
+        &nbsp;破棄

@@ -193,7 +193,7 @@ router.put('/drink', jsonParser, (req, res, next) => {
       throw err;
       res.sendStatus(400);
     }
-    res.sendStatus(200);
+    res.sendStatus(204);
   });
 });
 
