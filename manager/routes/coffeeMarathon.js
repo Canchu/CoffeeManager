@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var async = require('async');
 
 var connection = require('../mysql_connect.js');
 
@@ -16,26 +17,90 @@ router.get('/', function(req, res, next) {
   }
 
   if(month == undefined || month > 12 || month < 1){
-    month = day.getMonth()+1;
+    month = day.getMonth() + 1;
   }
 
-  var startDate = year + '-' + month + '-01';
-  var endDate   = year + '-' + month + '-31';
-  var sql = "select * from test where time >= '" + startDate + "'and time <= '" + endDate + "'";
+  const startDate = `${year}-${month}-01`;
+  const endDate = `${year}-${month}-31`;
 
-  connection.query(sql, function (err, rows) {
-    rowData = rows;
-    if(err){
-      console.log("table SQL error!",err);
-    }
-    console.log(rowData);
+  async.parallel([
+    (callback) => {
+      // ユーザランキング作成
+      async.waterfall([
+        (callbackUserRank) => {
+          // ユーザ一覧取得
+          const sql = "select name from test_id";
+          connection.query(sql, (err, rows) => {
+            if (err) throw err;
+            const userNames = rows.map((data) => {
+              return data.name;
+            });
+            callbackUserRank(null, userNames);
+          })
+        },
+        (userNames, callbackUserRank) => {
+          // ユーザごとの利用料金算出
+          async.map(userNames, (name, callbackMapRowData) => {
+            const sql = `select count(*) from test where name = '${name}' and time >= '${startDate}' and time <= '${endDate}';`;
+            connection.query(sql, (err, rows) => {
+              if (err) throw err;
+              callbackMapRowData(null, { name, qty: rows[0]['count(*)'] });
+            });
+          }, (err, results) => {
+            if (err) throw err;
+            results.sort((a, b) => {
+              if (a.qty > b.qty) return -1;
+              return 1;
+            });
+            callbackUserRank(null, results);
+          });
+        },
+      ], (err, results) => {
+        callback(null, results);
+      });
+    },
+    (callback) => {
+      // 商品別売上げランキングの作成
+      async.waterfall([
+        (callbackDrinkRank) => {
+          // 商品一覧取得
+          const sql = 'select name from test_drinks';
+          connection.query(sql, (err, rows) => {
+            if (err) throw err;
+            const drinkNames = rows.map((data) => {
+              return data.name;
+            });
+            callbackDrinkRank(null, drinkNames);
+          });
+        },
+        (drinkNames, callbackDrinkRank) => {
+          // 商品ごとの売上数算出
+          async.map(drinkNames, (name, callbackMapRowData) => {
+            const sql = `select count(*) from test where item = '${name}' and time >= '${startDate}' and time <= '${endDate}';`;
+            connection.query(sql, (err, rows) => {
+              if (err) throw err;
+              callbackMapRowData(null, { name, qty: rows[0]['count(*)'] });
+            });
+          }, (err, results) => {
+            callbackDrinkRank(null, results);
+          });
+        },
+      ], (err, results) => {
+        if (err) throw err;
+        callback(null, results);
+      });
+    },
+  ], (err, results) => {
+    // データをまとめてレンダリング
+    if (err) throw err;
     res.render('coffeeMarathon', {
-      year: year,
-      month: month,
-      //dlLink: csvFileName,
-      data: rowData
+      year,
+      month,
+      userRanks: results[0],
+      drinkRanks: results[1],
     });
   });
+
 });
 
 /* POST hello page. */
