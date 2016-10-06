@@ -4,10 +4,10 @@ var mysql = require('mysql');
 var sql_secret = JSON.parse(fs.readFileSync('./../secrets/sql_secret.json', 'utf8'));
 
 var db_config = {
-    host: sql_secret.host,
-    database: sql_secret.db,
-    user: sql_secret.user,
-    password: sql_secret.passwd,
+    host: sql_secret.dev.host,
+    database: sql_secret.dev.db,
+    user: sql_secret.dev.user,
+    password: sql_secret.dev.passwd,
 };
 
 var connection = mysql.createConnection(db_config);

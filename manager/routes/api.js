@@ -8,9 +8,9 @@ var router = express.Router();
 var jsonParser = bodyParser.json();
 
 // Database info
-const table_id = "test_id";
-const table_drinks = "test_drinks";
-const table_journal = "test";
+const table_id = "Users";
+const table_drinks = "Drinks";
+const table_journal = "Journal";
 
 router.get('/', function(req, res, next) {
 	res.send('Hello world!');

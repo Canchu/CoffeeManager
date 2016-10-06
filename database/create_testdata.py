@@ -37,7 +37,7 @@ OUTPUT_FILE_ID = "TestData_ID.sql"
 sqlCommands_id = "USE CoffeeManager_db;\n"
 
 for name in NAME_LIST:
-    sqlCommands_id += "INSERT INTO test_id " \
+    sqlCommands_id += "INSERT INTO Users " \
         "(id, name, email)" \
         "VALUES ('{}', '{}', '{}');\n" \
         .format(ID_LIST[name], name, ("konbu.su+" + name + "@gmail.com"))
@@ -59,13 +59,13 @@ sqlCommands += "USE CoffeeManager_db;\n"
 for _ in range(RECORD_COUNT):
 
     # 登録するランダムなデータの生成
-    date = randomDate("2016-5-1 00:00:00", "2016-5-30 23:59:59")
+    date = randomDate("2016-8-1 00:00:00", "2016-8-30 23:59:59")
     name = random.choice(NAME_LIST)
     drink = random.choice(DRINK_LIST)
     price = PRICE_LIST[drink]
 
     # ランダムなデータからInsert文を生成
-    sqlCommands += "INSERT INTO test " \
+    sqlCommands += "INSERT INTO Journal " \
     "(time, name, item, price) " \
     "VALUES ('{}', '{}', '{}', '{}');\n"\
     .format(date, name, drink, price)
@@ -73,13 +73,13 @@ for _ in range(RECORD_COUNT):
 for _ in range(RECORD_COUNT):
 
     # 登録するランダムなデータの生成
-    date = randomDate("2016-4-1 00:00:00", "2016-4-30 23:59:59")
+    date = randomDate("2016-9-1 00:00:00", "2016-9-30 23:59:59")
     name = random.choice(NAME_LIST)
     drink = random.choice(DRINK_LIST)
     price = PRICE_LIST[drink]
 
     # ランダムなデータからInsert文を生成
-    sqlCommands += "INSERT INTO test " \
+    sqlCommands += "INSERT INTO Journal " \
     "(time, name, item, price) " \
     "VALUES ('{}', '{}', '{}', '{}');\n"\
     .format(date, name, drink, price)
