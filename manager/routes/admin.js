@@ -5,9 +5,10 @@ var dateFormat = require('dateformat');
 
 var connection = require('../mysql_connect');
 
-const table_journal = "test";
-var table_id = "test_id";
-var table_drinks = "test_drinks";
+// Database info
+const table_id = "Users";
+const table_drinks = "Drinks";
+const table_journal = "Journal";
 
 router.get('/', function(req, res, next) {
 	data = {};

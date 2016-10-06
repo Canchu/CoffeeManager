@@ -6,6 +6,11 @@ var connection = require('../mysql_connect.js');
 
 var rowData;
 
+// Database info
+const table_id = "Users";
+const table_drinks = "Drinks";
+const table_journal = "Journal";
+
 /* GET hello page. */
 router.get('/', function(req, res, next) {
   var year = req.query.year;
@@ -29,7 +34,7 @@ router.get('/', function(req, res, next) {
       async.waterfall([
         (callbackUserRank) => {
           // ユーザ一覧取得
-          const sql = "select name from test_id";
+          const sql = `select name from ${table_id};`;
           connection.query(sql, (err, rows) => {
             if (err) throw err;
             const userNames = rows.map((data) => {
@@ -41,7 +46,7 @@ router.get('/', function(req, res, next) {
         (userNames, callbackUserRank) => {
           // ユーザごとの利用料金算出
           async.map(userNames, (name, callbackMapRowData) => {
-            const sql = `select count(*) from test where name = '${name}' and time >= '${startDate}' and time <= '${endDate}';`;
+            const sql = `select count(*) from ${table_journal} where name = '${name}' and time >= '${startDate}' and time <= '${endDate}';`;
             connection.query(sql, (err, rows) => {
               if (err) throw err;
               callbackMapRowData(null, { name, qty: rows[0]['count(*)'] });
@@ -64,7 +69,7 @@ router.get('/', function(req, res, next) {
       async.waterfall([
         (callbackDrinkRank) => {
           // 商品一覧取得
-          const sql = 'select name from test_drinks';
+          const sql = `select name from ${table_drinks}`;
           connection.query(sql, (err, rows) => {
             if (err) throw err;
             const drinkNames = rows.map((data) => {
@@ -76,7 +81,8 @@ router.get('/', function(req, res, next) {
         (drinkNames, callbackDrinkRank) => {
           // 商品ごとの売上数算出
           async.map(drinkNames, (name, callbackMapRowData) => {
-            const sql = `select count(*) from test where item = '${name}' and time >= '${startDate}' and time <= '${endDate}';`;
+            const sql = `select count(*) from ${table_journal} where item = '${name}' and time >= '${startDate}' and time <= '${endDate}';`;
+            console.log(sql);
             connection.query(sql, (err, rows) => {
               if (err) throw err;
               callbackMapRowData(null, { name, qty: rows[0]['count(*)'] });
@@ -116,7 +122,7 @@ router.post('/', function(req, res, next) {
 
   var startDate = '2015-' + month + '-01';
   var endDate   = '2015-' + month + '-31';
-  var sql = "select * from test where time >= '" + startDate + "'and time <= '" + endDate + "'";
+  var sql = `select * from ${table_journal} where time >= '${startDate}' and time <= '${endDate}';`;
   var csvSql = sql + " into outfile '/Users/masakiayano/Desktop/CoffeeManager/public/" + csvFileName + "' FIELDS TERMINATED BY ',' ";
   
   connection.query(csvSql, function (err, data) {

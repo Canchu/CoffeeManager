@@ -183,7 +183,7 @@ router.put('/drink', jsonParser, (req, res, next) => {
     return res.sendStatus(400);
   }
   async.each(req.body.prices, (data, callback) => {
-    const sql = `UPDATE test_drinks SET price = ${data.price} where id = ${data.id};`;
+    const sql = `UPDATE ${table_drinks} SET price = ${data.price} where id = ${data.id};`;
     connection.query(sql, (err, rows) => {
       if (err) throw err;
       callback();
