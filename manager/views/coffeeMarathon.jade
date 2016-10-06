@@ -1,64 +1,45 @@
-dectype
-  head
-    title Nojima_Hirota Lab Coffee Manager
-    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
-    script(src="jquery.tablesorter.min.js")
-    script(src="/javascripts/coffeeMarathon.js")
-    script(src="/javascripts/Chart.js")
-    link(rel="stylesheet" href="/stylesheets/style.css")
-    link(rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css")
-    link(rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap-theme.min.css")
-    script(type='text/javascript', src='/components/bootstrap/dist/js/bootstrap.min.js')
-    
-  body
-    .container
-        h1 Nojima_Hirota Lab Coffee Manager
+doctype
 
-        text #{year}年
-            select#month(name="month")
-                option#Jan(value="1") 1
-                option#Feb(value="2") 2
-                option#Mar(value="3") 3
-                option#Apr(value="4") 4 
-                option#May(value="5") 5
-                option#Jun(value="6") 6
-                option#Jul(value="7") 7
-                option#Aug(value="8") 8
-                option#Sep(value="9") 9
-                option#Oct(value="10") 10
-                option#Nov(value="11") 11 
-                option#Dec(value="12") 12
-            text 月の売り上げ状況
-          
-        h1 コーヒーマラソン
-        canvas#user_rank(height="300" width="600")
+head
+  title Nojima_Hirota Lab Coffee Manager
+  script(src="https://code.jquery.com/jquery-3.1.1.min.js")
+  script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa", crossorigin="anonymous")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.1.1/Chart.min.js")
+  link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u", crossorigin="anonymous")
+  script(src="/javascripts/coffeeMarathon.js", id="graph", data-user-ranks=JSON.stringify(userRanks), data-drink-ranks=JSON.stringify(drinkRanks))
+  link(rel="stylesheet" href="/stylesheets/style.css")
 
-        h1 コーヒーの種類別売り上げ
-        p 左：総売上金額 右：売り上げ個数
-        canvas#coffee_rank(height="300" width="500")
+body
+  .container
+    h1 Nojima_Hirota Lab Coffee Manager
+
+    text #{year}年
+      select#month(name="month")
+        option#Jan(value="1") 1
+        option#Feb(value="2") 2
+        option#Mar(value="3") 3
+        option#Apr(value="4") 4 
+        option#May(value="5") 5
+        option#Jun(value="6") 6
+        option#Jul(value="7") 7
+        option#Aug(value="8") 8
+        option#Sep(value="9") 9
+        option#Oct(value="10") 10
+        option#Nov(value="11") 11 
+        option#Dec(value="12") 12
+      text 月の売り上げ状況
+
+    h2 コーヒーマラソン
+    canvas#user_rank(height="300" width="600")
+
+    h2 コーヒーの種類別売り上げ
+    p 左：総売上金額 右：売り上げ個数
+    canvas#coffee_rank(height="300" width="600")
 
 
-        h2 #{year}年 #{month} 月の詳細データ
-        form(method="post")
-            input(type="text" name="targetMonth" value="#{month}" hidden)
-            input#DL_csv(value="csvをDL" type="submit")
-        
-        text#csvName(hidden) #{csvFileName}
+    h2 #{year}年 #{month} 月の詳細データ
+    form(method="post")
+      input(type="text" name="targetMonth" value="#{month}" hidden)
+      input#DL_csv(value="csvをDL" type="submit")
 
-        p 各項目をクリックするとソートします
-        table#all_data_table.all_data_table
-            thead
-                tr   
-                    th 購入時刻
-                    th 購入者  
-                    th 購入品
-                    th 値段
-
-            tbody#user_data
-                each key in data
-                    tr
-                        td(name="date") #{key.time} 
-                        td #{key.name}
-                        td #{key.item}
-                        td #{key.value}
-           
+    text#csvName(hidden) #{csvFileName}

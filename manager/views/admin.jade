@@ -1,0 +1,22 @@
+extends layout
+
+block title
+	title #{title}
+
+block body
+	h2.text-center 管理者ページ
+
+	h3 最近の利用状況
+
+	table.table.table-striped
+		thead
+			tr
+				th Date
+				th Drink
+				th Name
+		tbody
+			each key in recent
+				tr
+					td #{key.time}
+					td #{key.item}
+					td #{key.name}

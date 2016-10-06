@@ -14,3 +14,8 @@ sql_secret.json
 
 # secret files
 secrets
+admin_secret.json
+
+# vim
+*~
+*.swp

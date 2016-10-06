@@ -1,0 +1,31 @@
+extends layout
+
+block title
+	title #{title}
+
+block body
+	h2.text-center #{title}
+
+	table.table.table-striped
+		thead
+			tr
+				th ID
+				th Drink Name
+				th Price
+		tbody
+			each key in drinks
+				tr
+					td #{key.id}
+					td #{key.name}
+					td
+						input.number(type="text" value="#{key.price}")
+
+	.row
+		.col-md-3.col-md-offset-2
+			button.btn.btn-primary.center-block
+				span.glyphicon.glyphicon-floppy-saved
+				&nbsp;保存
+		.col-md-3.col-md-offset-2
+			button.btn.btn-warning.btn.center-block
+				span.glyphicon.glyphicon-floppy-remove
+				&nbsp;破棄

@@ -40,7 +40,7 @@ for name in NAME_LIST:
     sqlCommands_id += "INSERT INTO test_id " \
         "(id, name, email)" \
         "VALUES ('{}', '{}', '{}');\n" \
-        .format(ID_LIST[name], name, (name + "@uec.jp"))
+        .format(ID_LIST[name], name, ("konbu.su+" + name + "@gmail.com"))
 
 f = open(OUTPUT_FILE_ID, 'w')
 f.write(sqlCommands_id)
