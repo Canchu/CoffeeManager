@@ -46,28 +46,29 @@ router.get('/user', function(req, res, next) {
 
 // create a new user
 router.post('/user', jsonParser, function(req, res, next) {
-	var id = req.body.id;
-	var username = req.body.name;
-	var email = req.body.email;
-
-	// validation
-	if (id == null || username == null || email == null) {
-		res.status(400);
-		res.send();
+	if(!(req.body.id && req.body.name && req.body.email && req.body.password)) {
+		res.sendStatus(400);
 		return;
 	}
-
 	var sql_insert = "INSERT INTO "
 		+ table_id
-		+ " (id, name, email) VALUES ("
-		+ "'" + id + "', "
-		+ "'" + username + "', "
-		+ "'" + email + "');"
+		+ " (id, name, email, password) VALUES ("
+		+ "'" + req.body.id + "', "
+		+ "'" + req.body.name + "', "
+		+ "'" + req.body.email + "', "
+		+ "'" + req.body.password + "');"
 	connection.query(sql_insert, function(err) {
-		if (err) throw err;
+		if (err) {
+			if (err.code === 'ER_DUP_ENTRY') {
+				res.status(409);
+				res.send(err.code);
+				return;
+			}
+			res.sendStatus(400);
+			return;
+		}
+		res.sendStatus(201);
 	});
-
-	res.send("success");
 });
 
 // post payment information

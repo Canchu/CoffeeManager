@@ -4,6 +4,8 @@
 import MySQLdb
 import requests
 import time
+import hashlib
+import getpass
 
 import RPi.GPIO as GPIO
 
@@ -62,11 +64,21 @@ def main():
 		oled.clearDisplay()
 		oled.displayOff()
 
-		print 'please input your username'
+		print 'please enter your username'
 		username = raw_input()
 
-		print 'please input your email'
+		print 'please enter your email'
 		email = raw_input()
+
+		while(true):
+			print 'please enter your password'
+			pw1 = getpass.getpass()
+			print 'please re-enter your password'
+			pw2 = getpass.getpass()
+			if (pw1 == pw2):
+				break
+			else
+				print 'error'
 
 		f = open(SQL_SECRET_FILE, 'r')
 		sql_info = json.load(f)
