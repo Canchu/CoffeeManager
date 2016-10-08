@@ -1,6 +1,8 @@
 # coding:utf-8
 import random
 import time
+import string
+import hashlib
 
 # startからendの間でランダムな日付生成
 def randomDate(start, end):
@@ -9,6 +11,12 @@ def randomDate(start, end):
     etime = time.mktime(time.strptime(end, format))
     ptime = stime + random.random() * (etime - stime)
     return time.strftime(format, time.localtime(ptime))
+
+def randomStr(length):
+    return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(length)])
+
+def randomStrHex(length):
+    return ''.join([random.choice(string.hexdigits) for i in range(length)])
 
 DRINK_LIST = [ 'Barista', 'Dolce Gusto', 'Dolce Gusto with Milk', 'Special T', 'Iced Coffee' ]
 
@@ -20,69 +28,54 @@ PRICE_LIST = {
     'Iced Coffee': 50
 }
 
-NAME_LIST = [ 'uhey', 'yoshida', 'okano', 'minagawa', 'umesh' ]
-
-ID_LIST = {
-    'uhey': '00112233',
-    'yoshida': '44556677',
-    'okano': '8899AABB',
-    'minagawa': 'CCDDEEFF',
-    'umesh': '01234567'
-}
+NAME_LIST = [ 'uhey', 'yoshida', 'okano', 'minagawa', 'umesh', 'marchall', 'setsu' ]
+ID_LIST = {}
+for name in NAME_LIST:
+    ID_LIST[name] = randomStrHex(16)
+PW_LIST = {}
+for name in NAME_LIST:
+    tmp = randomStr(8)
+    hash = hashlib.sha256()
+    hash.update(tmp)
+    PW_LIST[name] = hash.hexdigest()
 
 # 出力するファイル名
 OUTPUT_FILE = "TestData.sql"
 OUTPUT_FILE_ID = "TestData_ID.sql"
 
-sqlCommands_id = "USE CoffeeManager_db;\n"
-
+sqlCommands_id = ""
 for name in NAME_LIST:
-    sqlCommands_id += "INSERT INTO test_id " \
-        "(id, name, email)" \
-        "VALUES ('{}', '{}', '{}');\n" \
-        .format(ID_LIST[name], name, ("konbu.su+" + name + "@gmail.com"))
+    sqlCommands_id += "INSERT INTO Users " \
+        "(id, name, email, password) " \
+        "VALUES ('{}', '{}', '{}', '{}');\n" \
+        .format(ID_LIST[name], name, ("konbu.su+" + name + "@gmail.com"), PW_LIST[name])
 
 f = open(OUTPUT_FILE_ID, 'w')
 f.write(sqlCommands_id)
 f.close()
 
 # 登録するデータ件数
-RECORD_COUNT = 100
+RECORD_COUNT = 200
+MONTH_LIST = ['6', '7', '8', '9']
 
 # 実行するSQLコマンド文字列
 sqlCommands = ""
 
-# 使用するデータベースを指定(今回はCreateTestData)
-sqlCommands += "USE CoffeeManager_db;\n"
-
 # 登録するデータの数だけINSERT文を生成
-for _ in range(RECORD_COUNT):
+for month in MONTH_LIST:
+    for _ in range(RECORD_COUNT):
 
-    # 登録するランダムなデータの生成
-    date = randomDate("2016-5-1 00:00:00", "2016-5-30 23:59:59")
-    name = random.choice(NAME_LIST)
-    drink = random.choice(DRINK_LIST)
-    price = PRICE_LIST[drink]
+        # 登録するランダムなデータの生成
+        date = randomDate('2016-' + month + '-1 00:00:00', '2016-' + month + '-30 23:59:59')
+        name = random.choice(NAME_LIST)
+        drink = random.choice(DRINK_LIST)
+        price = PRICE_LIST[drink]
 
-    # ランダムなデータからInsert文を生成
-    sqlCommands += "INSERT INTO test " \
-    "(time, name, item, price) " \
-    "VALUES ('{}', '{}', '{}', '{}');\n"\
-    .format(date, name, drink, price)
-
-for _ in range(RECORD_COUNT):
-
-    # 登録するランダムなデータの生成
-    date = randomDate("2016-4-1 00:00:00", "2016-4-30 23:59:59")
-    name = random.choice(NAME_LIST)
-    drink = random.choice(DRINK_LIST)
-    price = PRICE_LIST[drink]
-
-    # ランダムなデータからInsert文を生成
-    sqlCommands += "INSERT INTO test " \
-    "(time, name, item, price) " \
-    "VALUES ('{}', '{}', '{}', '{}');\n"\
-    .format(date, name, drink, price)
+        # ランダムなデータからInsert文を生成
+        sqlCommands += "INSERT INTO Journal " \
+        "(time, name, item, price, paid) " \
+        "VALUES ('{}', '{}', '{}', '{}', false);\n"\
+        .format(date, name, drink, price)
 
 # 生成したSQLコマンドをファイルに書き出す
 f = open(OUTPUT_FILE, 'w')

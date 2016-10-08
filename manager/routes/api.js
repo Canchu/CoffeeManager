@@ -8,9 +8,9 @@ var router = express.Router();
 var jsonParser = bodyParser.json();
 
 // Database info
-const table_id = "test_id";
-const table_drinks = "test_drinks";
-const table_journal = "test";
+const table_id = "Users";
+const table_drinks = "Drinks";
+const table_journal = "Journal";
 
 router.get('/', function(req, res, next) {
 	res.send('Hello world!');
@@ -46,28 +46,46 @@ router.get('/user', function(req, res, next) {
 
 // create a new user
 router.post('/user', jsonParser, function(req, res, next) {
-	var id = req.body.id;
-	var username = req.body.name;
-	var email = req.body.email;
-
-	// validation
-	if (id == null || username == null || email == null) {
-		res.status(400);
-		res.send();
+	if(!(req.body.id && req.body.name && req.body.email && req.body.password)) {
+		res.sendStatus(400);
 		return;
 	}
-
-	var sql_insert = "INSERT INTO "
+	const sql_insert = "INSERT INTO "
 		+ table_id
-		+ " (id, name, email) VALUES ("
-		+ "'" + id + "', "
-		+ "'" + username + "', "
-		+ "'" + email + "');"
+		+ " (id, name, email, password) VALUES ("
+		+ "'" + req.body.id + "', "
+		+ "'" + req.body.name + "', "
+		+ "'" + req.body.email + "', "
+		+ "'" + req.body.password + "');"
 	connection.query(sql_insert, function(err) {
-		if (err) throw err;
+		if (err) {
+			if (err.code === 'ER_DUP_ENTRY') {
+				res.status(409);
+				res.send(err.code);
+				return;
+			}
+			res.sendStatus(400);
+			return;
+		}
+		res.sendStatus(201);
 	});
+});
 
-	res.send("success");
+// delete a user
+router.delete('/user', jsonParser, (req, res, next) => {
+	if (!req.body.id) {
+		res.sendStatus(400);
+		return;
+	}
+	const sql = `DELETE FROM ${table_id} WHERE id = '${req.body.id}'`;
+	connection.query(sql, (err) => {
+		if (err) {
+			console.log(err);
+			res.sendStatus(400);
+			return;
+		}
+		res.sendStatus(204);
+	});
 });
 
 // post payment information
@@ -155,7 +173,7 @@ router.post('/payment', jsonParser, function(req, res, next) {
 			if (err) {
 				throw err;
 			} else {
-				res.send("success");
+				res.sendStatus(201);
 			}
 		});
 	});
@@ -179,22 +197,22 @@ router.get('/drink', function(req, res, next) {
 
 // 商品価格の更新
 router.put('/drink', jsonParser, (req, res, next) => {
-  if (!req.body.prices) {
-    return res.sendStatus(400);
-  }
-  async.each(req.body.prices, (data, callback) => {
-    const sql = `UPDATE test_drinks SET price = ${data.price} where id = ${data.id};`;
-    connection.query(sql, (err, rows) => {
-      if (err) throw err;
-      callback();
-    });
-  }, (err) => {
-    if (err) {
-      throw err;
-      res.sendStatus(400);
-    }
-    res.sendStatus(204);
-  });
+	if (!req.body.prices) {
+		return res.sendStatus(400);
+	}
+	async.each(req.body.prices, (data, callback) => {
+		const sql = `UPDATE ${table_drinks} SET price = ${data.price} where id = ${data.id};`;
+		connection.query(sql, (err, rows) => {
+			if (err) throw err;
+			callback();
+		});
+	}, (err) => {
+		if (err) {
+			throw err;
+			res.sendStatus(400);
+		}
+		res.sendStatus(200);
+	});
 });
 
 module.exports = router;

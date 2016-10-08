@@ -4,11 +4,18 @@
 import MySQLdb
 import requests
 import time
+import hashlib
+import getpass
 
 import RPi.GPIO as GPIO
 
 from so1602a import SO1602A
 from nfcreader import nfcReader
+
+APP_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+
+TABLE_NAME = 'test_id';
+SQL_SECRET_FILE = APP_ROOT + '/secrets/sql_secret.json'
 
 def getUsername(nfc_id):
 	uri = 'http://127.0.0.1:3000/api/get/username'
@@ -35,6 +42,8 @@ def beep(pin, num = 2, err = False):
 
 def main():
 	bell = 27
+
+	GPIO.cleanup()
 	
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(bell, GPIO.OUT)
@@ -55,19 +64,33 @@ def main():
 		oled.clearDisplay()
 		oled.displayOff()
 
-		print 'please input your username'
+		print 'please enter your username'
 		username = raw_input()
 
-		print 'please input your email'
+		print 'please enter your email'
 		email = raw_input()
 
+		while(true):
+			print 'please enter your password'
+			pw1 = getpass.getpass()
+			print 'please re-enter your password'
+			pw2 = getpass.getpass()
+			if (pw1 == pw2):
+				break
+			else
+				print 'error'
+
+		f = open(SQL_SECRET_FILE, 'r')
+		sql_info = json.load(f)
+
 		connection = MySQLdb.connect(
-			db = 'CoffeeManager_db',
-			user = 'user',
-			passwd='NojiNoji')
+			host = sql_info['host'],
+			db = sql_info['dbname'],
+			user = sql_info['user'],
+			passwd = sql_info['passwd'])
 		cursor = connection.cursor()
 
-		sql = "INSERT INTO test_id (id, name, email) VALUES ('%s', '%s', '%s')" % (reader.id, username, email)
+		sql = "INSERT INTO %s (id, name, email) VALUES ('%s', '%s', '%s')" % (TABLE_NAME, reader.id, username, email)
 		print(cursor.execute(sql))
 		connection.commit()
 

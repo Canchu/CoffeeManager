@@ -11,6 +11,9 @@ node_modules
 # Google API
 client_secret.json
 sql_secret.json
+
+# secret files
+secrets
 admin_secret.json
 
 # vim

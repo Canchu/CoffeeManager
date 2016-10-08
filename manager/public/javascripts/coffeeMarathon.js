@@ -5,6 +5,11 @@ $(function() {
   var userRanks = $main.data('user-ranks');
   var drinkRanks = $main.data('drink-ranks');
 
+  /* 月の数字の表示と自動ページジャンプ */ 
+  $('select[name=selectMonth]').change(function() {
+    window.location.href = '/coffeeMarathon?month=' + $(this).val();
+  });
+
   /*****　コーヒーレースと品物別売り上げのグラフ作成 ******/ 
 
   var userRankGraphData =  {
@@ -37,26 +42,6 @@ $(function() {
   var drinkRankGraph = new Chart(document.getElementById("coffee_rank").getContext("2d")).Bar(drinkRankGraphData); 
   /********************************/
 
-
-  /*****　月の数字の表示と自動ページジャンプ******/ 
-  var query = window.location.search.substring(1);
-  var paramValue = query.split('=')[1];
-  var monthName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  if(paramValue == undefined){
-    var day = new Date();
-    paramValue = day.getMonth()+1;
-    $('#'+monthName[day.getMonth()]).attr('selected', 'true');
-  }
-
-  for(var i=0; i<12; i++){
-    if(i+1 == paramValue){
-      $('#'+monthName[i]).attr('selected', 'true');
-    }
-  }
-
-  changePageByMonth(paramValue);
-  /********************************/
-
   $('#DL_csv').live ('click', function(){
     $.ajax({
       type: 'POST',
@@ -76,33 +61,3 @@ $(function() {
   });
 });
 
-
-function changePageByMonth(paramValue){
-  var nowMonth = document.getElementById('month').value;
-  if(nowMonth - paramValue != 0){
-    window.location.href = "/coffeeMarathon?month=" + nowMonth;
-    return;
-  }
-  else if(paramValue == undefined){
-    return;
-  }
-  setTimeout("changePageByMonth("+ paramValue +")",500);
-}
-
-/*****　表の日付のフォーマットを整える ******/
-function comDateFormat(date){
-  var detailDate = date.split(" ");
-  var monthName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-  for(var i = 0; i<12; i++){
-    if(detailDate[1] == monthName[i]){
-      detailDate[1] = i+1;
-    }
-  }
-
-  var result = detailDate[3] + "年" + detailDate[1] + "月" 
-    + detailDate[2] + "日" + detailDate[0] + " "+detailDate[4];
-
-  return result;
-}
-/********************************/
