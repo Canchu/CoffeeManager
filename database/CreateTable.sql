@@ -2,7 +2,8 @@ CREATE TABLE Journal (
     time DATETIME NOT NULL PRIMARY KEY,
     name VARCHAR(16) NOT NULL,
     item TEXT NOT NULL,
-    price INT NOT NULL
+    price INT NOT NULL,
+    paid BOOLEAN NOT NULL
 );
 
 CREATE TABLE Drinks (

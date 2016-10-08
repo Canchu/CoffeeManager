@@ -17,13 +17,12 @@ $(function() {
 
     if (newPrices.length > 0) {
       $.ajax({
-        type: 'put',
+        type: 'PUT',
         url: 'http://localhost:3000/api/drink',
         data: JSON.stringify({
           prices: newPrices
         }),
         contentType: 'application/JSON',
-        dataType : 'JSON',
         success: function() {
           alert('ええで');
           location.reload();
