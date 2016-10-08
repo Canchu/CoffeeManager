@@ -4,7 +4,7 @@ head
   title Nojima_Hirota Lab Coffee Manager
   script(src="https://code.jquery.com/jquery-3.1.1.min.js")
   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa", crossorigin="anonymous")
-  script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.1.1/Chart.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js")
   link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u", crossorigin="anonymous")
   script(src="/javascripts/coffeeMarathon.js", id="graph", data-user-ranks=JSON.stringify(userRanks), data-drink-ranks=JSON.stringify(drinkRanks))
   link(rel="stylesheet" href="/stylesheets/style.css")
@@ -23,11 +23,11 @@ body
     text の売り上げ状況
 
     h2 コーヒーマラソン
-    canvas#user_rank(height="300" width="600")
+    canvas#user_rank(width=600, height=400)
 
     h2 コーヒーの種類別売り上げ
     p 左：総売上金額 右：売り上げ個数
-    canvas#coffee_rank(height="300" width="600")
+    canvas#coffee_rank(width=600, height=400)
 
 
     h2 #{year}年 #{month} 月の詳細データ

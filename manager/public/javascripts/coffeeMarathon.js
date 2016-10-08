@@ -12,34 +12,72 @@ $(function() {
 
   /*****　コーヒーレースと品物別売り上げのグラフ作成 ******/ 
 
+  var ctxUser = document.getElementById("user_rank");
   var userRankGraphData =  {
-    // labels: allUserName,
-    labels: userRanks.map(function(data) { return data.name; }),
-    datasets: [{
-      label: "UserRank dataset",
-      fillColor: "rgba(52,152,219,0.5)",
-      strokeColor: "rgba(52,152,219,0.8)",
-      highlightFill: "rgba(52,152,219,0.75)",
-      highlightStroke: "rgba(52,152,219,1)",
-      data: userRanks.map(function(data) { return data.qty; }),
-    }],
+    type: 'bar',
+    data: {
+      labels: userRanks.map(function(data) { return data.name; }),
+      datasets: [{
+        label: "# of coffee",
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255,99,132,1)',
+        borderWidth: 1,
+        data: userRanks.map(function(data) { return data.qty; }),
+      }],
+    },
+    options: {
+      responsive: false,
+      legend: {
+        display: true,
+      },
+      scales: {
+        xAxes: [{
+          ticks: {
+            fontSize: 16
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            fontSize: 14,
+            beginAtZero: true
+          }
+        }]
+      }
+    }
   };
+  var userRankGraph = new Chart(ctxUser, userRankGraphData);
 
-  var userRankGraph = new Chart(document.getElementById("user_rank").getContext("2d")).Bar(userRankGraphData);
-
+  var ctxDrink = document.getElementById("coffee_rank");
   var drinkRankGraphData = {
-    labels: drinkRanks.map(function(data) { return data.name; }),
-    datasets: [{
-      label: "CoffeeRank dataset price",
-      fillColor: "rgba(220,220,220,0.5)",
-      strokeColor: "rgba(220,220,220,0.8)",
-      highlightFill: "rgba(220,220,220,0.75)",
-      highlightStroke: "rgba(220,220,220,1)",
-      data: drinkRanks.map(function(data) { return data.qty; }),
-    }],
+    type: 'bar',
+    data: {
+      labels: drinkRanks.map(function(data) { return data.name; }),
+      datasets: [{
+        label: "# of coffee",
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255,99,132,1)',
+        borderWidth: 1,
+        data: drinkRanks.map(function(data) { return data.qty; }),
+      }],
+    },
+    options: {
+      responsive: false,
+      scales: {
+        xAxes: [{
+          ticks: {
+            fontSize: 16
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            fontSize: 14,
+            beginAtZero:true
+          }
+        }]
+      }
+    }
   };
-
-  var drinkRankGraph = new Chart(document.getElementById("coffee_rank").getContext("2d")).Bar(drinkRankGraphData); 
+  var drinkRankGraph = new Chart(ctxDrink, drinkRankGraphData); 
   /********************************/
 
   $('#DL_csv').live ('click', function(){
