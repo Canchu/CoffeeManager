@@ -50,7 +50,7 @@ router.post('/user', jsonParser, function(req, res, next) {
 		res.sendStatus(400);
 		return;
 	}
-	var sql_insert = "INSERT INTO "
+	const sql_insert = "INSERT INTO "
 		+ table_id
 		+ " (id, name, email, password) VALUES ("
 		+ "'" + req.body.id + "', "
@@ -68,6 +68,23 @@ router.post('/user', jsonParser, function(req, res, next) {
 			return;
 		}
 		res.sendStatus(201);
+	});
+});
+
+// delete a user
+router.delete('/user', jsonParser, (req, res, next) => {
+	if (!req.body.id) {
+		res.sendStatus(400);
+		return;
+	}
+	const sql = `DELETE FROM ${table_id} WHERE id = '${req.body.id}'`;
+	connection.query(sql, (err) => {
+		if (err) {
+			console.log(err);
+			res.sendStatus(400);
+			return;
+		}
+		res.sendStatus(204);
 	});
 });
 
@@ -156,7 +173,7 @@ router.post('/payment', jsonParser, function(req, res, next) {
 			if (err) {
 				throw err;
 			} else {
-				res.send("success");
+				res.sendStatus(201);
 			}
 		});
 	});
@@ -180,22 +197,22 @@ router.get('/drink', function(req, res, next) {
 
 // 商品価格の更新
 router.put('/drink', jsonParser, (req, res, next) => {
-  if (!req.body.prices) {
-    return res.sendStatus(400);
-  }
-  async.each(req.body.prices, (data, callback) => {
-    const sql = `UPDATE ${table_drinks} SET price = ${data.price} where id = ${data.id};`;
-    connection.query(sql, (err, rows) => {
-      if (err) throw err;
-      callback();
-    });
-  }, (err) => {
-    if (err) {
-      throw err;
-      res.sendStatus(400);
-    }
-    res.sendStatus(200);
-  });
+	if (!req.body.prices) {
+		return res.sendStatus(400);
+	}
+	async.each(req.body.prices, (data, callback) => {
+		const sql = `UPDATE ${table_drinks} SET price = ${data.price} where id = ${data.id};`;
+		connection.query(sql, (err, rows) => {
+			if (err) throw err;
+			callback();
+		});
+	}, (err) => {
+		if (err) {
+			throw err;
+			res.sendStatus(400);
+		}
+		res.sendStatus(200);
+	});
 });
 
 module.exports = router;
