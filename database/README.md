@@ -18,7 +18,7 @@ CREATE DATABASE CoffeeManager;
 ```
 create table Journal (
   date DATETIME not null primary key,
-  username varchar(16),
+  username varchar(16) not null,
   item text not null,
   price int not null,
   paid boolean not null
@@ -33,7 +33,8 @@ create table Drinks (
 create table Users (
   id varchar(32) not null primary key,
   username varchar(16) not null,
-  email varchar(128) not null
+  email varchar(128) not null,
+  password char(64) not null
 );
 ```
 
