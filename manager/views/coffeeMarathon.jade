@@ -11,28 +11,44 @@ head
 
 body
   .container
-    h1 Nojima_Hirota Lab Coffee Manager
+    .logo
+      img(src="/images/coffee.png")
+      div.logo-title Vogue cafe
 
-    text #{year}年
-    select#month(name="selectMonth")
-      - for (var i = 1; i <= 12; i++)
-        if i == month
-          option(value="#{i}" selected) #{i}月
-        else
-          option(value="#{i}") #{i}月
-    text の売り上げ状況
+    .selector
+      select(name="selectYear")
+        - for (var i = 2015; i <= 2016; i++)
+          if i == 2016
+            option(value="#{i}" selected) #{i}年
+          else
+            option(value="#{i}") #{i}年
+      select#month(name="selectMonth")
+        - for (var i = 1; i <= 12; i++)
+          if i == month
+            option(value="#{i}" selected) #{i}月
+          else
+            option(value="#{i}") #{i}月
+      span の売上状況
 
-    h2 コーヒーマラソン
-    canvas#user_rank(width=600, height=400)
+    .row
+        .col-md-6.col-lg-6
+            .paper
+                .title コーヒーマラソン
+                .graph
+                  canvas#user_rank(width=300, height=200)
 
-    h2 コーヒーの種類別売り上げ
-    p 左：総売上金額 右：売り上げ個数
-    canvas#coffee_rank(width=600, height=400)
+        .col-md-6.col-lg-6
+            .paper
+                .title 種類別売上
+                .graph
+                  canvas#coffee_rank(width=300, height=200)
 
+    .footer
+      a(href="/admin") 管理者ページ
 
-    h2 #{year}年 #{month} 月の詳細データ
-    form(method="post")
-      input(type="text" name="targetMonth" value="#{month}" hidden)
-      input#DL_csv(value="csvをDL" type="submit")
+    // h2 #{year}年 #{month} 月の詳細データ
+    // form(method="post")
+    //   input(type="text" name="targetMonth" value="#{month}" hidden)
+    //   input#DL_csv(value="csvをDL" type="submit")
 
-    text#csvName(hidden) #{csvFileName}
+    // text#csvName(hidden) #{csvFileName}

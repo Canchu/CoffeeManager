@@ -5,40 +5,40 @@ $(function() {
   var userRanks = $main.data('user-ranks');
   var drinkRanks = $main.data('drink-ranks');
 
-  /* 月の数字の表示と自動ページジャンプ */ 
+  /* 月の数字の表示と自動ページジャンプ */
   $('select[name=selectMonth]').change(function() {
     window.location.href = '/coffeeMarathon?month=' + $(this).val();
   });
 
-  /*****　コーヒーレースと品物別売り上げのグラフ作成 ******/ 
 
+  /* コーヒーマラソン */
   var ctxUser = document.getElementById("user_rank");
-  var userRankGraphData =  {
+  var userRankGraphData = {
     type: 'bar',
     data: {
       labels: userRanks.map(function(data) { return data.name; }),
       datasets: [{
         label: "# of coffee",
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255,99,132,1)',
+        backgroundColor: 'rgba(83, 120, 72, 0.3)',
+        borderColor: 'rgba(83, 120, 72, 0.6)',
         borderWidth: 1,
         data: userRanks.map(function(data) { return data.qty; }),
       }],
     },
     options: {
-      responsive: false,
+      responsive: true,
       legend: {
         display: true,
       },
       scales: {
         xAxes: [{
           ticks: {
-            fontSize: 16
+            fontSize: 12
           }
         }],
         yAxes: [{
           ticks: {
-            fontSize: 14,
+            fontSize: 12,
             beginAtZero: true
           }
         }]
@@ -47,6 +47,7 @@ $(function() {
   };
   var userRankGraph = new Chart(ctxUser, userRankGraphData);
 
+  /* 種類別売上 */
   var ctxDrink = document.getElementById("coffee_rank");
   var drinkRankGraphData = {
     type: 'bar',
@@ -54,23 +55,23 @@ $(function() {
       labels: drinkRanks.map(function(data) { return data.name; }),
       datasets: [{
         label: "# of coffee",
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255,99,132,1)',
+        backgroundColor: 'rgba(83, 120, 72, 0.3)',
+        borderColor: 'rgba(83, 120, 72, 0.6)',
         borderWidth: 1,
         data: drinkRanks.map(function(data) { return data.qty; }),
       }],
     },
     options: {
-      responsive: false,
+      responsive: true,
       scales: {
         xAxes: [{
           ticks: {
-            fontSize: 16
+            fontSize: 12
           }
         }],
         yAxes: [{
           ticks: {
-            fontSize: 14,
+            fontSize: 12,
             beginAtZero:true
           }
         }]
