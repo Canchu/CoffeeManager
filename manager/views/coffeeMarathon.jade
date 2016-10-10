@@ -16,13 +16,13 @@ body
       div.logo-title Vogue cafe
 
     .selector
-      select(name="selectYear")
+      select.box(name="selectYear")
         - for (var i = 2015; i <= 2016; i++)
           if i == 2016
             option(value="#{i}" selected) #{i}年
           else
             option(value="#{i}") #{i}年
-      select#month(name="selectMonth")
+      select.box#month(name="selectMonth")
         - for (var i = 1; i <= 12; i++)
           if i == month
             option(value="#{i}" selected) #{i}月

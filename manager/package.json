@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
-    "dev": "node-dev app.js"
+    "start": "node ./bin/www",
+    "dev": "node-dev ./bin/www"
   },
   "dependencies": {
     "async": "^2.0.0-rc.6",

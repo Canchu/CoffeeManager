@@ -33,8 +33,6 @@ app.all('/admin*', basicAuth(function(user, password) {
   return user === admin_usr && password === admin_pass;
 }));
 
-app.listen(3000);
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
