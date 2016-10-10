@@ -1,8 +1,10 @@
 @import './main';
 
 .title {
+  color: $titleColor;
   text-align: center;
   font-size: 1.4em;
+  font-weight: bold;
 }
 
 .sidebar {

@@ -1,10 +1,11 @@
 @import 'https://fonts.googleapis.com/css?family=Dancing+Script';
 
-$colorMain: rgba(241,196,15,0.1);
+$mainColor: rgba(241,196,15,0.1);
 $shadowColor: rgba(0,0,0,0.3);
+$titleColor: #5D4037;
 
 body {
-  background-color: $colorMain;
+  background-color: $mainColor;
   font: "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
