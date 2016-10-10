@@ -1,37 +1,64 @@
+@import 'https://fonts.googleapis.com/css?family=Dancing+Script';
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: rgba(241,196,15,0.1);
+  font: "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.container {
+    position: relative;
+    max-width: 1070px;
+    padding-bottom: 30px;
 }
 
-table th {
-    background-color:#9999ff;
-    padding: 3px;
+.logo {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-table tr td {
-    background-color:#eeeeff;
-    padding: 3px;
+.logo-title {
+    color: #5D4037;
+    font-size: 60px;
+    font-family: 'Dancing Script';
+    font-weight: bold;
+    margin-top: -24px;
 }
 
-table.all_data_table {
-	width: 100%;
-	text-align: left;
+.selector {
+    text-align: center;
+    margin: 0 auto 20px;
+    font-size: 1.2em;
 }
 
-table.all_data_table thead tr .header {
-	background-image: url(../images/bg.gif);
-	background-repeat: no-repeat;
-	background-position: center right;
-	cursor: pointer;
+.selector > .box {
+    margin-right: 3px;
 }
 
-table.all_data_table thead tr .headerSortUp {
-	background-image: url(../images/asc.gif);
+.title {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #5D4037;
 }
-table.all_data_table thead tr .headerSortDown {
-	background-image: url(../images/desc.gif);
+
+.paper {
+    position: relative;
+    margin-bottom: 20px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    background-color: rgba(255,255,255,1);
+    padding: 10px 0;
+    text-align: center;
+}
+
+.graph {
+    padding: 0 20px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    left: 0;
+    margin-top: 20px;
+    text-align: center;
 }

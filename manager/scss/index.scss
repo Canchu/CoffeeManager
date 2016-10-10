@@ -1,0 +1,39 @@
+@import "./main";
+
+.selector {
+  text-align: center;
+  margin: 0 auto 20px;
+  font-size: 1.2em;
+}
+
+.selector > .box {
+  margin-right: 3px;
+}
+
+.title {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: $titleColor;
+}
+
+.paper {
+  position: relative;
+  margin-bottom: 20px;
+  box-shadow: 1px 1px 2px $shadowColor;
+  background-color: rgba(255,255,255,1);
+  padding: 10px 0;
+  text-align: center;
+}
+
+.graph {
+  padding: 0 20px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 10px;
+  right: 0;
+  left: 0;
+  margin-top: 20px;
+  text-align: center;
+}

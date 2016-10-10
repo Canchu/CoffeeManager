@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var http = require('http');
 var fs = require('fs');
 
 var routes = require('./routes/index');
@@ -18,8 +17,6 @@ var app = express();
 
 var jsonParser = bodyParser.json();
 
-var connection = ('./mysql_connect');
-
 var admin_secret = JSON.parse(fs.readFileSync('./admin_secret.json', 'utf8'));
 var admin_usr = admin_secret.username;
 var admin_pass = admin_secret.password;
@@ -32,8 +29,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.all('/admin*', basicAuth(function(user, password) {
   return user === admin_usr && password === admin_pass;
 }));
-
-app.listen(3000);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

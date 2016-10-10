@@ -18,12 +18,12 @@ def randomStr(length):
 def randomStrHex(length):
     return ''.join([random.choice(string.hexdigits) for i in range(length)])
 
-DRINK_LIST = [ 'Barista', 'Dolce Gusto', 'Dolce Gusto with Milk', 'Special T', 'Iced Coffee' ]
+DRINK_LIST = [ 'Barista', 'Dolce Gusto', 'Dolce Gusto w/ Milk', 'Special T', 'Iced Coffee' ]
 
 PRICE_LIST = {
     'Barista': 30,
     'Dolce Gusto': 60,
-    'Dolce Gusto with Milk': 120,
+    'Dolce Gusto w/ Milk': 120,
     'Special T': 60,
     'Iced Coffee': 50
 }
