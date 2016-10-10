@@ -2,7 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var async = require('async');
 
-var connection = require('../mysql_connect')
+var getSqlConnection = require('../getSqlConnection')
 
 var router = express.Router();
 var jsonParser = bodyParser.json();
@@ -12,12 +12,12 @@ const table_id = "Users";
 const table_drinks = "Drinks";
 const table_journal = "Journal";
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
 	res.send('Hello world!');
 })
 
 // get username by nfcid
-router.get('/user', function(req, res, next) {
+router.get('/user', (req, res, next) => {
 	var id = "";
 	var name = "unregistered";
 
@@ -32,20 +32,23 @@ router.get('/user', function(req, res, next) {
 			+ " WHERE id = '"
 			+ id
 			+ "';";
-		connection.query(sql, function(err, rows) {
-			if (err) {
-				console.log("SQL error:", err);
-			}
-			if (rows.length > 0) {
-				name = rows[0].name;
-			}
-			res.json({'name': name});
+		getSqlConnection((err, connection) => {
+			connection.query(sql, (err, rows) => {
+				connection.release();
+				if (err) {
+					console.log("SQL error:", err);
+				}
+				if (rows.length > 0) {
+					name = rows[0].name;
+				}
+				res.json({'name': name});
+			});
 		});
 	}
 });
 
 // create a new user
-router.post('/user', jsonParser, function(req, res, next) {
+router.post('/user', jsonParser, (req, res, next) => {
 	if(!(req.body.id && req.body.name && req.body.email && req.body.password)) {
 		res.sendStatus(400);
 		return;
@@ -57,17 +60,20 @@ router.post('/user', jsonParser, function(req, res, next) {
 		+ "'" + req.body.name + "', "
 		+ "'" + req.body.email + "', "
 		+ "'" + req.body.password + "');"
-	connection.query(sql_insert, function(err) {
-		if (err) {
-			if (err.code === 'ER_DUP_ENTRY') {
-				res.status(409);
-				res.send(err.code);
+	getSqlConnection((err, connection) => {
+		connection.query(sql_insert, (err) => {
+			connection.release();
+			if (err) {
+				if (err.code === 'ER_DUP_ENTRY') {
+					res.status(409);
+					res.send(err.code);
+					return;
+				}
+				res.sendStatus(400);
 				return;
 			}
-			res.sendStatus(400);
-			return;
-		}
-		res.sendStatus(201);
+			res.sendStatus(201);
+		});
 	});
 });
 
@@ -78,13 +84,16 @@ router.delete('/user', jsonParser, (req, res, next) => {
 		return;
 	}
 	const sql = `DELETE FROM ${table_id} WHERE id = '${req.body.id}'`;
-	connection.query(sql, (err) => {
-		if (err) {
-			console.log(err);
-			res.sendStatus(400);
-			return;
-		}
-		res.sendStatus(204);
+	getSqlConnection((err, connection) => {
+		connection.query(sql, (err) => {
+			connection.release();
+			if (err) {
+				console.log(err);
+				res.sendStatus(400);
+				return;
+			}
+			res.sendStatus(204);
+		});
 	});
 });
 
@@ -107,7 +116,7 @@ router.post('/payment', jsonParser, function(req, res, next) {
 		+ " where id = "
 		+ drink_id
 		+ ";"
-	
+
 	// get user name from db
 	var sql_name = "SELECT name FROM "
 		+ table_id
@@ -115,66 +124,72 @@ router.post('/payment', jsonParser, function(req, res, next) {
 		+ id
 		+ "';"
 
-	async.parallel([
-		function(callback) {
-			console.log(sql_drink);
-			connection.query(sql_drink, function(err, rows) {
-				if (err) {
-					throw err;
-				}
-				if (rows.length > 0) {
-					drink_name = rows[0].name;
-					price = rows[0].price;
-					console.log(rows[0]);
-				}
-				callback();
-			});
-		},
-		function(callback) {
-			console.log(sql_name);
-			connection.query(sql_name, function(err, rows) {
-				if (err) {
-					throw err;
-				}
-				if (rows.length > 0) {
-					user_name = rows[0].name;
-					console.log(rows[0]);
-				}
-				callback();
-			});
-		}
-	], function(err) {
-		if (err) {
-			throw err;
-		}
-
-		// 例外処理
-		if (user_name == null) {
-			res.status(400);
-			res.send();
-			return;
-		}
-		if (drink_name == null) {
-			res.status(400);
-			res.send();
-			return;
-		}
-
-		// 購入情報をDBに記録
-		var sql_insert = "INSERT INTO "
-			+ table_journal
-			+ " (time, name, item, price) VALUES ("
-			+ "'" + date + "', "
-			+ "'" + user_name + "', "
-			+ "'" + drink_name + "', "
-			+ price + ");"
-		console.log(sql_insert);
-		connection.query(sql_insert, function(err) {
+	getSqlConnection((err, connection) => {
+		async.parallel([
+			function(callback) {
+				console.log(sql_drink);
+				connection.query(sql_drink, function(err, rows) {
+					if (err) {
+						throw err;
+					}
+					if (rows.length > 0) {
+						drink_name = rows[0].name;
+						price = rows[0].price;
+						console.log(rows[0]);
+					}
+					callback();
+				});
+			},
+			function(callback) {
+				console.log(sql_name);
+				connection.query(sql_name, function(err, rows) {
+					if (err) {
+						throw err;
+					}
+					if (rows.length > 0) {
+						user_name = rows[0].name;
+						console.log(rows[0]);
+					}
+					callback();
+				});
+			}
+		], function(err) {
 			if (err) {
 				throw err;
-			} else {
-				res.sendStatus(201);
 			}
+
+			// 例外処理
+			if (user_name == null) {
+				connection.release();
+				res.status(400);
+				res.send();
+				return;
+			}
+			if (drink_name == null) {
+				connection.release();
+				res.status(400);
+				res.send();
+				return;
+			}
+
+			// 購入情報をDBに記録
+			var sql_insert = "INSERT INTO "
+				+ table_journal
+				+ " (time, name, item, price, paid) VALUES ("
+				+ "'" + date + "', "
+				+ "'" + user_name + "', "
+				+ "'" + drink_name + "', "
+				+ price + ","
+				+ 'false' + ");"
+			console.log(sql_insert);
+			connection.query(sql_insert, function(err) {
+				connection.release();
+				if (err) {
+					throw err;
+				} else {
+					res.sendStatus(201);
+				}
+			});
 		});
 	});
 });
@@ -184,14 +199,17 @@ router.get('/drink', function(req, res, next) {
 	var data = { drinks: [] };
 
 	var sql_drink = "SELECT * FROM " + table_drinks + ";";
-	connection.query(sql_drink, function(err, rows) {
-		if (err) {
-			throw err;
-			res.status(400);
-		}
-		data.drinks = rows;
-		console.log(data);
-		res.json(JSON.stringify(data));
+	getSqlConnection((err, connection) => {
+		connection.query(sql_drink, function(err, rows) {
+			connection.release();
+			if (err) {
+				throw err;
+				res.status(400);
+			}
+			data.drinks = rows;
+			console.log(data);
+			res.json(JSON.stringify(data));
+		});
 	});
 });
 
@@ -200,18 +218,21 @@ router.put('/drink', jsonParser, (req, res, next) => {
 	if (!req.body.prices) {
 		return res.sendStatus(400);
 	}
-	async.each(req.body.prices, (data, callback) => {
-		const sql = `UPDATE ${table_drinks} SET price = ${data.price} where id = ${data.id};`;
-		connection.query(sql, (err, rows) => {
-			if (err) throw err;
-			callback();
+	getSqlConnection((err, connection) => {
+		async.each(req.body.prices, (data, callback) => {
+			const sql = `UPDATE ${table_drinks} SET price = ${data.price} where id = ${data.id};`;
+			connection.query(sql, (err, rows) => {
+				if (err) throw err;
+				callback();
+			});
+		}, (err) => {
+			connection.release();
+			if (err) {
+				throw err;
+				res.sendStatus(400);
+			}
+			res.sendStatus(200);
 		});
-	}, (err) => {
-		if (err) {
-			throw err;
-			res.sendStatus(400);
-		}
-		res.sendStatus(200);
 	});
 });
 
