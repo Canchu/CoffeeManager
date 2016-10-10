@@ -1,0 +1,29 @@
+@import 'https://fonts.googleapis.com/css?family=Dancing+Script';
+
+$colorMain: rgba(241,196,15,0.1);
+$shadowColor: rgba(0,0,0,0.3);
+
+body {
+  background-color: $colorMain;
+  font: "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.container {
+  position: relative;
+  max-width: 1100px;
+  padding-bottom: 30px;
+}
+
+.logo {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.logo-title {
+  color: #5D4037;
+  font-size: 60px;
+  font-family: 'Dancing Script';
+  font-weight: bold;
+  margin-top: -24px;
+}

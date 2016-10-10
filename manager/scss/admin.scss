@@ -1,0 +1,34 @@
+@import './main';
+
+.title {
+  text-align: center;
+  font-size: 1.4em;
+}
+
+.sidebar {
+  box-shadow: 1px 1px 2px $shadowColor;
+  background-color: rgba(255,255,255,1);
+}
+
+.btn {
+  width: 100%;
+}
+
+input.number {
+  text-align: right;
+  width: 100px;
+}
+
+.paper {
+  position: relative;
+  padding: 20px;
+  box-shadow: 1px 1px 2px $shadowColor;
+  background-color: rgba(255,255,255,1);
+}
+
+.icon-text {
+  padding-left: 5px;
+}
+
+.btn-ary {
+}

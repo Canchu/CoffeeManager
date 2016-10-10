@@ -7,7 +7,7 @@ block title
   title #{title}
 
 block body
-  h2.text-center #{title}
+  .title #{title}
 
   table.table.table-striped
     thead
@@ -23,12 +23,12 @@ block body
           td
             input.number(type="text" value="#{key.price}" id="#{key.id}")
 
-  .row
+  .row.btn-ary
     .col-md-3.col-md-offset-2
       button#saveChanges.btn.btn-primary.center-block
-        span.glyphicon.glyphicon-floppy-saved
-        &nbsp;保存
+        i.glyphicon.glyphicon-floppy-saved
+        span.icon-text 保存
     .col-md-3.col-md-offset-2
       button#discardChanges.btn.btn-warning.btn.center-block
-        span.glyphicon.glyphicon-floppy-remove
-        &nbsp;破棄
+        i.glyphicon.glyphicon-floppy-remove
+        span.icon-text 破棄

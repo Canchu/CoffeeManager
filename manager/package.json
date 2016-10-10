@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "node-dev ./bin/www"
+    "dev": "node-dev ./bin/www & npm run watch:scss",
+    "build:scss": "node-sass ./scss --output ./public/stylesheets",
+    "watch:scss": "node-sass ./scss --output ./public/stylesheets -w"
   },
   "dependencies": {
     "async": "^2.0.0-rc.6",
@@ -20,6 +22,7 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
-    "bower": "^1.7.9"
+    "bower": "^1.7.9",
+    "node-sass": "^3.10.1"
   }
 }

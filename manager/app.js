@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var http = require('http');
 var fs = require('fs');
 
 var routes = require('./routes/index');
@@ -17,8 +16,6 @@ var basicAuth = require('basic-auth-connect');
 var app = express();
 
 var jsonParser = bodyParser.json();
-
-var connection = ('./mysql_connect');
 
 var admin_secret = JSON.parse(fs.readFileSync('./admin_secret.json', 'utf8'));
 var admin_usr = admin_secret.username;
