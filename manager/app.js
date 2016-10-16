@@ -10,7 +10,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var coffeeMarathon = require('./routes/coffeeMarathon');
 var admin = require('./routes/admin');
-var api = require('./routes/api');
+var api = require('./routes/api/index');
 var basicAuth = require('basic-auth-connect');
 
 var app = express();
