@@ -7,9 +7,8 @@ $(function() {
 
   /* 月の数字の表示と自動ページジャンプ */
   $('select[name=selectMonth]').change(function() {
-    window.location.href = '/coffeeMarathon?month=' + $(this).val();
+    window.location.href = '/?month=' + $(this).val();
   });
-
 
   /* コーヒーマラソン */
   var ctxUser = document.getElementById("user_rank");

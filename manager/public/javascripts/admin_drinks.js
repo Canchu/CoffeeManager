@@ -18,10 +18,8 @@ $(function() {
     if (newPrices.length > 0) {
       $.ajax({
         type: 'PUT',
-        url: 'http://localhost:3000/api/drink',
-        data: JSON.stringify({
-          prices: newPrices
-        }),
+        url: 'http://localhost:3000/api/drinks',
+        data: JSON.stringify(newPrices),
         contentType: 'application/JSON',
         success: function() {
           alert('ええで');
