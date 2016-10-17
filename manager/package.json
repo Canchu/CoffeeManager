@@ -23,7 +23,6 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
-    "bower": "^1.7.9",
     "node-sass": "^3.10.1"
   }
 }

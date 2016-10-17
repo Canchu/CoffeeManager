@@ -7,10 +7,6 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
-var coffeeMarathon = require('./routes/coffeeMarathon');
-var admin = require('./routes/admin');
-var api = require('./routes/api/index');
 var basicAuth = require('basic-auth-connect');
 
 var app = express();
@@ -35,10 +31,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use('/', routes);
-app.use('/users', users);
-app.use('/admin', admin)
-app.use('/coffeeMarathon', coffeeMarathon);
-app.use('/api', api);
 
 // production error handler
 // no stacktraces leaked to user
